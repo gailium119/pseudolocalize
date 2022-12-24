@@ -125,11 +125,19 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
         case 'Y': out = Y[random(8)]; break;
         case 'Z': out = Z[random(4)]; break;
         case '\n':out = std::wstring(L"\n") + L"[" + buf + L"]"; break;
+        case '%': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt]!='l') {
+                    break;
+                }
+            }
+            break;
+        }
         default: out = str[cnt]; break;
         }
         after += out;
     }
-    wprintf(L"%ls\n", after.c_str());
     if (nolower) {
         // supposingly a macro
         return str;
