@@ -22,6 +22,7 @@
 #include "RisohSettings.hpp"
 #include <shlwapi.h>
 #include <unordered_set>
+#include "pseudo.h"
 
 bool PredefClassToID(MStringW name, WORD& w)
 {
@@ -837,7 +838,7 @@ bool DialogRes::SaveDlgInitData(MByteStreamEx::data_type& data) const
     return !dlginit.empty();
 }
 
-MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl)
+MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl,bool pseudolocalize)
 {
     MStringW ret;
 
@@ -878,7 +879,8 @@ MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl)
     if (!m_title.empty())
     {
         ret += L"CAPTION ";
-        ret += m_title.quoted_wstr();
+        if (pseudolocalize) ret += (m_title.quoted_wstr(pseudolocalize));
+       else ret += m_title.quoted_wstr(pseudolocalize);
         ret += L"\r\n";
     }
     if (!m_class.empty())

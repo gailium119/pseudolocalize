@@ -320,7 +320,7 @@ public:
         return stream.data();
     }
 
-    MStringW Dump(const MIdOrString& id_or_str, bool bAlwaysControl = false);
+    MStringW Dump(const MIdOrString& id_or_str, bool bAlwaysControl = false, bool pseudolocalize=false);
 
     void FixupForRad(bool bRevert = false);
     void FixupForTest(bool bRevert = false);

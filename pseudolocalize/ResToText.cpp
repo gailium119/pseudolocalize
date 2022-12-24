@@ -466,7 +466,7 @@ ResToText::DoDialog(const EntryBase& entry, bool pseudolocalize)
     if (dialog_res.LoadFromStream(stream))
     {
         MString str = GetLanguageStatement(entry.m_lang,pseudolocalize);
-        str += dialog_res.Dump(entry.m_name, !!g_settings.bAlwaysControl);
+        str += dialog_res.Dump(entry.m_name, !!g_settings.bAlwaysControl,pseudolocalize);
         str += L"\r\n";
         return str;
     }

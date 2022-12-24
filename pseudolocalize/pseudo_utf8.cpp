@@ -134,6 +134,24 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
             }
             break;
         }
+        case '<': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] == '>') {
+                    break;
+                }
+            }
+            break;
+        }
+        case '&': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] >= 'A' && str[cnt] <= 'z') {
+                    break;
+                }
+            }
+            break;
+        }
         default: out = str[cnt]; break;
         }
         after += out;
