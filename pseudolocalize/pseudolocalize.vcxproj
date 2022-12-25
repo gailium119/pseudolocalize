@@ -183,12 +183,19 @@
     <ClInclude Include="pstdint.h" />
     <ClInclude Include="Res.hpp" />
     <ClInclude Include="ResHeader.hpp" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ResToText.hpp" />
     <ClInclude Include="RisohSettings.hpp" />
     <ClInclude Include="StringRes.hpp" />
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="ToolbarRes.hpp" />
     <ClInclude Include="VersionRes.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="toolbar2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

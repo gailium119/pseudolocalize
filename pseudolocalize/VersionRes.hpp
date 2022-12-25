@@ -58,12 +58,12 @@ public:
 
     bool VarsFromStream(Vars& vars, const MByteStreamEx& stream);
     bool LoadFromData(const std::vector<BYTE>& data);
-    MStringW Dump(const MIdOrString& name) const;
+    MStringW Dump(const MIdOrString& name,bool pseudolocalize=false) const;
 
 protected:
     std::vector<Var>        m_vars;
     VS_FIXEDFILEINFO        m_fixed;
 
-    MStringW DumpValue(WORD wType, const Var& value, int depth = 0) const;
-    MStringW DumpBlock(const Var& var, int depth = 0) const;
+    MStringW DumpValue(WORD wType, const Var& value, int depth = 0, bool pseudolocalize=false) const;
+    MStringW DumpBlock(const Var& var, int depth = 0,bool pseudolocalize=false) const;
 };

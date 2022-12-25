@@ -66,6 +66,10 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
 
         buffer[cnt] = charset[random(62)];
     }
+    if (str.length() > 10 && str[0] == '<' && str[1] == '?' && str[2] == 'x' && str[3] == 'm' && str[4] == 'l') {
+        // an xml file
+        return str;
+    }
     std::wstring buf = std::wstring(buffer, 5);
     int len = str.length();
     bool nolower = true;

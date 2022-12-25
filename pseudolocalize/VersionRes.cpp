@@ -79,7 +79,7 @@ bool VersionRes::LoadFromData(const std::vector<BYTE>& data)
 }
 
 MStringW
-VersionRes::DumpValue(WORD wType, const Var& value, int depth) const
+VersionRes::DumpValue(WORD wType, const Var& value, int depth,bool pseudolocalize) const
 {
     MStringW ret = MStringW(depth * 4, L' ');
     ret += L"VALUE ";
@@ -93,7 +93,11 @@ VersionRes::DumpValue(WORD wType, const Var& value, int depth) const
             WCHAR buf[MAX_PATH];
             for (size_t i = 0; i < value.value.size(); i += 2)
             {
-                StringCchPrintfW(buf, _countof(buf), L", 0x%04X", *pw++);
+                if (*pw == 1033) {
+                    StringCchPrintfW(buf, _countof(buf), L", 0x%04X",1281 );
+                     pw++;
+                }
+                else  StringCchPrintfW(buf, _countof(buf), L", 0x%04X", *pw++);
                 ret += buf;
             }
         }
@@ -102,7 +106,9 @@ VersionRes::DumpValue(WORD wType, const Var& value, int depth) const
             const WCHAR *pch = reinterpret_cast<const WCHAR *>(&value.value[0]);
             MStringW str(pch, value.value.size() / 2);
             ret += L", ";
-            ret += mstr_quote(str);
+            if (str[str.length() - 1] == '\0') str = str.substr(0, str.length() - 1);
+            if (pseudolocalize&&_wcsicmp(value.key.c_str() ,L"FileVersion")!=0) ret += mstr_quote(Pseudo_localize_utf8(str));
+            else ret += mstr_quote(str);
         }
     }
     else
@@ -115,13 +121,14 @@ VersionRes::DumpValue(WORD wType, const Var& value, int depth) const
 }
 
 MStringW
-VersionRes::DumpBlock(const Var& var, int depth) const
+VersionRes::DumpBlock(const Var& var, int depth,bool pseudolocalize) const
 {
     MStringW ret;
 
     ret += MStringW(depth * 4, L' ');
     ret += L"BLOCK \"";
-    ret += var.key;
+    if (pseudolocalize && _wcsicmp(var.key.c_str(), L"040904B0") == 0)ret+= L"050104B0";
+    else ret += var.key;
     ret += L"\"\r\n";
     ret += MStringW(depth * 4, L' ');
     if (false)
@@ -133,11 +140,11 @@ VersionRes::DumpBlock(const Var& var, int depth) const
     {
         if (var.key == L"StringFileInfo")
         {
-            ret += DumpBlock(item, depth + 1);
+            ret += DumpBlock(item, depth + 1,pseudolocalize);
         }
         else
         {
-            ret += DumpValue(item.head.wType, item, depth + 1);
+            ret += DumpValue(item.head.wType, item, depth + 1,pseudolocalize);
         }
     }
 
@@ -151,7 +158,7 @@ VersionRes::DumpBlock(const Var& var, int depth) const
 }
 
 MStringW
-VersionRes::Dump(const MIdOrString& name) const
+VersionRes::Dump(const MIdOrString& name, bool pseudolocalize) const
 {
     MStringW ret;
     WCHAR line[MAX_PATH];
@@ -189,7 +196,7 @@ VersionRes::Dump(const MIdOrString& name) const
     const std::vector<Var>& vars = m_vars[0].vars;
     for (auto& item : vars)
     {
-        ret += DumpBlock(item, 1);
+        ret += DumpBlock(item, 1,pseudolocalize);
     }
     if (false)
         ret += L"END\r\n";

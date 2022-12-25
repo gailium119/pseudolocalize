@@ -273,7 +273,7 @@ bool DialogItem::SaveToStreamEx(MByteStreamEx& stream) const
     return true;
 }
 
-MStringW DialogItem::Dump(bool bAlwaysControl) const
+MStringW DialogItem::Dump(bool bAlwaysControl,bool pseudolocalize) const
 {
     MStringW cls;
 
@@ -295,56 +295,56 @@ MStringW DialogItem::Dump(bool bAlwaysControl) const
 #define BS_TYPEMASK     0x0000000F
 #endif
             if ((m_style & BS_TYPEMASK) == BS_AUTO3STATE)
-                return _do_AUTO3STATE();
+                return _do_AUTO3STATE(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_AUTOCHECKBOX)
-                return _do_AUTOCHECKBOX();
+                return _do_AUTOCHECKBOX(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_AUTORADIOBUTTON)
-                return _do_AUTORADIOBUTTON();
+                return _do_AUTORADIOBUTTON(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_CHECKBOX)
-                return _do_CHECKBOX();
+                return _do_CHECKBOX(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_DEFPUSHBUTTON)
-                return _do_DEFPUSHBUTTON();
+                return _do_DEFPUSHBUTTON(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_GROUPBOX)
-                return _do_GROUPBOX();
+                return _do_GROUPBOX(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_PUSHBUTTON || (m_style & BS_TYPEMASK) == BS_OWNERDRAW)
-                return _do_PUSHBUTTON();
+                return _do_PUSHBUTTON(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_PUSHBOX ||
                 (m_style & BS_TYPEMASK) == 0xC)
             {
-                return _do_PUSHBOX();
+                return _do_PUSHBOX(pseudolocalize);
             }
             if ((m_style & BS_TYPEMASK) == BS_RADIOBUTTON)
-                return _do_RADIOBUTTON();
+                return _do_RADIOBUTTON(pseudolocalize);
             if ((m_style & BS_TYPEMASK) == BS_3STATE)
-                return _do_STATE3();
+                return _do_STATE3(pseudolocalize);
         }
         if (lstrcmpiW(cls.c_str(), L"STATIC") == 0)
         {
             if ((m_style & SS_TYPEMASK) == SS_LEFT)
-                return _do_LTEXT();
+                return _do_LTEXT(pseudolocalize);
             if ((m_style & SS_TYPEMASK) == SS_CENTER)
-                return _do_CTEXT();
+                return _do_CTEXT(pseudolocalize);
             if ((m_style & SS_TYPEMASK) == SS_RIGHT)
-                return _do_RTEXT();
+                return _do_RTEXT(pseudolocalize);
             if ((m_style & SS_TYPEMASK) == SS_ICON)
-                return _do_ICON();
+                return _do_ICON(pseudolocalize);
         }
         if (m_title.empty())
         {
             if (lstrcmpiW(cls.c_str(), L"EDIT") == 0)
-                return _do_EDITTEXT();
+                return _do_EDITTEXT(pseudolocalize);
             if (lstrcmpiW(cls.c_str(), L"COMBOBOX") == 0)
-                return _do_COMBOBOX();
+                return _do_COMBOBOX(pseudolocalize);
             if (lstrcmpiW(cls.c_str(), L"LISTBOX") == 0)
-                return _do_LISTBOX();
+                return _do_LISTBOX(pseudolocalize);
             if (lstrcmpiW(cls.c_str(), L"SCROLLBAR") == 0)
-                return _do_SCROLLBAR();
+                return _do_SCROLLBAR(pseudolocalize);
         }
     }
-    return DumpControl(cls);
+    return DumpControl(cls,pseudolocalize);
 }
 
-MStringW DialogItem::DumpControl(MStringW& cls) const
+MStringW DialogItem::DumpControl(MStringW& cls,bool pseudolocalize) const
 {
     MStringW ret;
 
@@ -356,7 +356,7 @@ MStringW DialogItem::DumpControl(MStringW& cls) const
     }
     else
     {
-        ret += m_title.quoted_wstr();
+        ret += m_title.quoted_wstr(pseudolocalize);
     }
 
     ret += L", ";
@@ -426,7 +426,7 @@ MStringW
 DialogItem::_do_CONTROL(bool bNeedsText, 
                        const MStringW& ctrl, 
                        const MStringW& cls, 
-                       DWORD DefStyle) const
+                       DWORD DefStyle, bool pseudolocalize) const
 {
     MStringW ret;
     ret += ctrl;
@@ -440,7 +440,7 @@ DialogItem::_do_CONTROL(bool bNeedsText,
         }
         else
         {
-            ret += m_title.quoted_wstr();
+            ret += m_title.quoted_wstr(pseudolocalize);
         }
         ret += L", ";
     }
@@ -986,7 +986,7 @@ MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl,bool 
     for (UINT i = 0; i < m_cItems; ++i)
     {
         ret += L"    ";
-        ret += m_items[i].Dump(!!g_settings.bAlwaysControl);
+        ret += m_items[i].Dump(!!g_settings.bAlwaysControl,pseudolocalize);
         ret += L"\r\n";
     }
 

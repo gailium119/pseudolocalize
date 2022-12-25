@@ -436,7 +436,7 @@ ResToText::DoMenu(const EntryBase& entry, bool pseudolocalize)
     if (menu_res.LoadFromStream(stream))
     {
         MString str = GetLanguageStatement(entry.m_lang,pseudolocalize);
-        str += menu_res.Dump(entry.m_name);
+        str += menu_res.Dump(entry.m_name,pseudolocalize);
         str += L"\r\n";
         return str;
     }
@@ -599,7 +599,7 @@ ResToText::DoVersion(const EntryBase& entry, bool pseudolocalize)
     if (ver_res.LoadFromData(entry.m_data))
     {
         MString str = GetLanguageStatement(entry.m_lang,pseudolocalize);
-        str += ver_res.Dump(entry.m_name);
+        str += ver_res.Dump(entry.m_name,pseudolocalize);
         str += L"\r\n";
         return str;
     }

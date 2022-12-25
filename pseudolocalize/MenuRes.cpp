@@ -412,10 +412,10 @@ bool MenuRes::SaveToStreamEx(MByteStreamEx& stream) const
 }
 
 MenuRes::string_type
-MenuRes::Dump(const MIdOrString& name) const
+MenuRes::Dump(const MIdOrString& name, bool pseudolocalize) const
 {
     if (IsExtended())
-        return DumpEx(name);
+        return DumpEx(name,pseudolocalize);
 
     string_type ret;
 
@@ -451,7 +451,8 @@ MenuRes::Dump(const MIdOrString& name) const
         {
             ret += string_type((item.wDepth + 1) * 4, L' ');
             ret += L"POPUP \"";
-            ret += mstr_escape(item.text);
+            if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text));
+            else ret += mstr_escape(item.text);
             ret += L"\"";
             ret += DumpFlags(item.fItemFlags);
             ret += L"\r\n";
@@ -471,7 +472,8 @@ MenuRes::Dump(const MIdOrString& name) const
             else
             {
                 ret += L"MENUITEM \"";
-                ret += mstr_escape(item.text);
+                if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text));
+                else ret += mstr_escape(item.text);
                 ret += L"\", ";
                 if (0)
                 {
@@ -505,7 +507,7 @@ MenuRes::Dump(const MIdOrString& name) const
 }
 
 MenuRes::string_type
-MenuRes::DumpEx(const MIdOrString& name) const
+MenuRes::DumpEx(const MIdOrString& name,bool pseudolocalize) const
 {
     string_type ret;
 
@@ -541,7 +543,8 @@ MenuRes::DumpEx(const MIdOrString& name) const
         {
             ret += string_type((item.wDepth + 1) * 4, L' ');
             ret += L"POPUP ";
-            ret += mstr_quote(item.text);
+            if(pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text));
+            else ret += mstr_quote(item.text);
             if (item.menuId || item.dwType || item.dwState || item.dwHelpId)
             {
                 ret += L", ";
@@ -595,7 +598,8 @@ MenuRes::DumpEx(const MIdOrString& name) const
             else
             {
                 ret += L"MENUITEM ";
-                ret += mstr_quote(item.text);
+                if (pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text));
+                else ret += mstr_quote(item.text);
                 if (item.menuId || item.dwType || item.dwState)
                 {
                     ret += L", ";

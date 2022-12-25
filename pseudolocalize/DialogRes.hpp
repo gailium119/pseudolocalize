@@ -95,7 +95,7 @@ struct DialogItem
 
     bool SaveToStream(MByteStreamEx& stream, bool extended = false) const;
     bool SaveToStreamEx(MByteStreamEx& stream) const;
-    MStringW Dump(bool bAlwaysControl = false) const;
+    MStringW Dump(bool bAlwaysControl = false, bool pseudolocalize=false) const;
 
     bool IsStdComboBox() const
     {
@@ -137,101 +137,101 @@ struct DialogItem
         return false;
     }
 
-    MStringW DumpControl(MStringW& cls) const;
+    MStringW DumpControl(MStringW& cls, bool pseudolocalize=false) const;
 
     MStringW _do_CONTROL(bool bNeedsText, 
                          const MStringW& ctrl, 
                          const MStringW& cls, 
-                         DWORD DefStyle) const;
+                         DWORD DefStyle, bool pseudolocalize=false) const;
 
-    MStringW _do_BUTTON(const MStringW& ctrl, DWORD DefStyle) const
+    MStringW _do_BUTTON(const MStringW& ctrl, DWORD DefStyle, bool pseudolocalize = false) const
     {
-        return _do_CONTROL(true, ctrl, L"BUTTON", DefStyle);
-    }
-
-    MStringW _do_TEXT(const MStringW& ctrl, DWORD DefStyle) const
-    {
-        return _do_CONTROL(true, ctrl, L"STATIC", DefStyle);
+        return _do_CONTROL(true, ctrl, L"BUTTON", DefStyle,pseudolocalize);
     }
 
-    MStringW _do_AUTO3STATE() const
+    MStringW _do_TEXT(const MStringW& ctrl, DWORD DefStyle, bool pseudolocalize = false) const
     {
-        return _do_BUTTON(L"AUTO3STATE", (BS_AUTO3STATE | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_CONTROL(true, ctrl, L"STATIC", DefStyle, pseudolocalize);
     }
-    MStringW _do_AUTOCHECKBOX() const
+
+    MStringW _do_AUTO3STATE(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"AUTOCHECKBOX", (BS_AUTOCHECKBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"AUTO3STATE", (BS_AUTO3STATE | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_AUTORADIOBUTTON() const
+    MStringW _do_AUTOCHECKBOX(bool pseudolocalize=false) const
+    {
+        return _do_BUTTON(L"AUTOCHECKBOX", (BS_AUTOCHECKBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
+    }
+    MStringW _do_AUTORADIOBUTTON(bool pseudolocalize=false) const
     {
         // NOTE: RC won't add WS_TABSTOP. Microsoft document said a lie.
-        return _do_BUTTON(L"AUTORADIOBUTTON", (BS_AUTORADIOBUTTON | /*WS_TABSTOP |*/ WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"AUTORADIOBUTTON", (BS_AUTORADIOBUTTON | /*WS_TABSTOP |*/ WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_CHECKBOX() const
+    MStringW _do_CHECKBOX(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"CHECKBOX", (BS_CHECKBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"CHECKBOX", (BS_CHECKBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_DEFPUSHBUTTON() const
+    MStringW _do_DEFPUSHBUTTON(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"DEFPUSHBUTTON", (BS_DEFPUSHBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"DEFPUSHBUTTON", (BS_DEFPUSHBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_GROUPBOX() const
+    MStringW _do_GROUPBOX(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"GROUPBOX", (BS_GROUPBOX | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"GROUPBOX", (BS_GROUPBOX | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_PUSHBUTTON() const
+    MStringW _do_PUSHBUTTON(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"PUSHBUTTON", (BS_PUSHBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"PUSHBUTTON", (BS_PUSHBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_PUSHBOX() const
+    MStringW _do_PUSHBOX(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"PUSHBOX", (BS_PUSHBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"PUSHBOX", (BS_PUSHBOX | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_RADIOBUTTON() const
+    MStringW _do_RADIOBUTTON(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"RADIOBUTTON", (BS_RADIOBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"RADIOBUTTON", (BS_RADIOBUTTON | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_STATE3() const
+    MStringW _do_STATE3(bool pseudolocalize=false) const
     {
-        return _do_BUTTON(L"STATE3", (BS_3STATE | WS_TABSTOP | WS_CHILD | WS_VISIBLE));
+        return _do_BUTTON(L"STATE3", (BS_3STATE | WS_TABSTOP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_LTEXT() const
+    MStringW _do_LTEXT(bool pseudolocalize=false) const
     {
-        return _do_TEXT(L"LTEXT", (SS_LEFT | WS_GROUP | WS_CHILD | WS_VISIBLE));
+        return _do_TEXT(L"LTEXT", (SS_LEFT | WS_GROUP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_CTEXT() const
+    MStringW _do_CTEXT(bool pseudolocalize=false) const
     {
-        return _do_TEXT(L"CTEXT", (SS_CENTER | WS_GROUP | WS_CHILD | WS_VISIBLE));
+        return _do_TEXT(L"CTEXT", (SS_CENTER | WS_GROUP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_RTEXT() const
+    MStringW _do_RTEXT(bool pseudolocalize=false) const
     {
-        return _do_TEXT(L"RTEXT", (SS_RIGHT | WS_GROUP | WS_CHILD | WS_VISIBLE));
+        return _do_TEXT(L"RTEXT", (SS_RIGHT | WS_GROUP | WS_CHILD | WS_VISIBLE), pseudolocalize);
     }
-    MStringW _do_EDITTEXT() const
+    MStringW _do_EDITTEXT(bool pseudolocalize=false) const
     {
         assert(m_title.empty());
         return _do_CONTROL(false, L"EDITTEXT", L"EDIT", 
-                           ES_LEFT | WS_BORDER | WS_TABSTOP | WS_CHILD | WS_VISIBLE);
+                           ES_LEFT | WS_BORDER | WS_TABSTOP | WS_CHILD | WS_VISIBLE, pseudolocalize);
     }
-    MStringW _do_COMBOBOX() const
+    MStringW _do_COMBOBOX(bool pseudolocalize=false) const
     {
         assert(m_title.empty());
-        return _do_CONTROL(false, L"COMBOBOX", L"COMBOBOX", WS_CHILD | WS_VISIBLE);
+        return _do_CONTROL(false, L"COMBOBOX", L"COMBOBOX", WS_CHILD | WS_VISIBLE, pseudolocalize);
     }
-    MStringW _do_ICON() const
+    MStringW _do_ICON(bool pseudolocalize=false) const
     {
-        return _do_CONTROL(true, L"ICON", L"STATIC", SS_ICON | WS_CHILD | WS_VISIBLE);
+        return _do_CONTROL(true, L"ICON", L"STATIC", SS_ICON | WS_CHILD | WS_VISIBLE, pseudolocalize);
     }
-    MStringW _do_LISTBOX() const
+    MStringW _do_LISTBOX(bool pseudolocalize=false) const
     {
         assert(m_title.empty());
         return _do_CONTROL(false, L"LISTBOX", L"LISTBOX", 
-                           LBS_NOTIFY | WS_BORDER | WS_CHILD | WS_VISIBLE);
+                           LBS_NOTIFY | WS_BORDER | WS_CHILD | WS_VISIBLE, pseudolocalize);
     }
-    MStringW _do_SCROLLBAR() const
+    MStringW _do_SCROLLBAR(bool pseudolocalize=false) const
     {
         assert(m_title.empty());
-        return _do_CONTROL(false, L"SCROLLBAR", L"SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE);
+        return _do_CONTROL(false, L"SCROLLBAR", L"SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE, pseudolocalize);
     }
 
     BOOL IsClassRegd(const WCHAR *name) const;
