@@ -781,7 +781,7 @@ bool DialogRes::LoadDlgInitData(const MByteStreamEx::data_type& data)
     if (dlginit.LoadFromStream(stream))
     {
         for (auto& item : m_items)
-        {
+        { 
             item.m_str_list.clear();
         }
 
