@@ -226,8 +226,9 @@ BOOL ParseCommandLine(HWND hwnd, INT argc, WCHAR** targv)
 
     return true;
 }
-BOOL DoExtract(const EntryBase* entry, BOOL bExporting)
+BOOL DoExtract(const EntryBase* entry, BOOL bExporting, bool pseudolocalize=false)
 {
+   
     ResToText res2text;
 
     if (bExporting && g_settings.bStoreToResFolder)
@@ -393,7 +394,7 @@ BOOL DoExtract(const EntryBase* entry, BOOL bExporting)
         }
     }
 
-    return g_res.extract_bin(filename.c_str(), entry);
+    return g_res.extract_bin(filename.c_str(), entry,pseudolocalize);
 }
 
 // write the resource.h file
@@ -911,7 +912,7 @@ BOOL DoExport(LPCWSTR pszRCFile, LPWSTR pszResHFile, const EntrySet& found , boo
         {
             if (e->m_type == RT_STRING || e->m_type == RT_FONTDIR)
                 continue;
-            if (!DoExtract(e, TRUE))
+            if (!DoExtract(e, TRUE,pseudolocalize))
                 return FALSE;
         }
     }

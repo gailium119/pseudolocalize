@@ -73,6 +73,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
     std::wstring buf = std::wstring(buffer, 5);
     int len = str.length();
     bool nolower = true;
+    bool hasunderline = false;
     for (int cnt = 0; cnt < len; cnt++) {
         std::wstring out;
         switch (str[cnt]) {
@@ -132,7 +133,14 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
         case '%': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt]!='l') {
+                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt]!='l'&&str[cnt]!='W') {
+                    break;
+                }
+                if (str[cnt] == 'W') {
+                    for (cnt++; cnt < len; cnt++) {
+                        out += str[cnt];
+                        if (str[cnt] == '%') break;
+                    }
                     break;
                 }
             }
@@ -156,11 +164,12 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
             }
             break;
         }
+        case '_':hasunderline = true; out = str[cnt]; break;
         default: out = str[cnt]; break;
         }
         after += out;
     }
-    if (nolower) {
+    if (nolower&&hasunderline) {
         // supposingly a macro
         return str;
     }

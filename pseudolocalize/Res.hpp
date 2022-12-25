@@ -790,14 +790,55 @@ public:
     BOOL extract_icon(LPCWSTR pszFileName, const EntryBase *entry) const;
 
     // extract the resource data as a binary file
-    BOOL extract_bin(LPCWSTR pszFileName, const EntryBase *e) const
+    BOOL extract_bin(LPCWSTR pszFileName, const EntryBase *e,bool pseudolocalize=false) const
     {
         if (e->m_et != ET_LANG)
             return FALSE;   // invalid
+        EntryBase::data_type m_data;
+        m_data.clear();
+        if (pseudolocalize && _wcsicmp(e->m_type.c_str(), L"MUI") == 0) {
+            for (int i = 0; i < e->m_data.size(); i++) {
+                if (e->m_data[i] == 'e' && e->m_data[i + 1] == '\0'
+                    && e->m_data[i + 2] == 'n' && e->m_data[i + 3] == '\0'
+                    && e->m_data[i + 4] == '-' && e->m_data[i + 5] == '\0'
+                    && (e->m_data[i + 6] == 'u' || e->m_data[i + 6] == 'U') && e->m_data[i + 7] == '\0'
+                    && (e->m_data[i + 8] == 's' || e->m_data[i + 8] == 'S') && e->m_data[i + 9] == '\0'
+                    ) {
+                    m_data.push_back('q');
+                    m_data.push_back('\0');
+                    m_data.push_back('p');
+                    m_data.push_back('\0');
+                    m_data.push_back('s');
+                    m_data.push_back('\0');
+                    m_data.push_back('-');
+                    m_data.push_back('\0');
+                    m_data.push_back('p');
+                    m_data.push_back('\0');
+                    m_data.push_back('l');
+                    m_data.push_back('\0');
+                    m_data.push_back('o');
+                    m_data.push_back('\0');
+                    m_data.push_back('c');
+                    m_data.push_back('\0');
+                    while (m_data.size() % 8 != 0)                m_data.push_back('\0');
+                    break;
 
-        // write the resource data to a binary file
-        MByteStreamEx bs(e->m_data);
-        return bs.SaveToFile(pszFileName);
+                }
+                else {
+                    m_data.push_back(e->m_data[i]);
+                }
+            }
+
+            // write the resource data to a binary file
+            MByteStreamEx bs(m_data);
+            return bs.SaveToFile(pszFileName);
+
+        }
+        else {
+            // write the resource data to a binary file
+            MByteStreamEx bs(e->m_data);
+            return bs.SaveToFile(pszFileName);
+        }
     }
 
     // import the resource data from the specified *.res file

@@ -1124,7 +1124,7 @@ MString ResToText::DoEncodedText(const EntryBase& entry, const MStringW& enc, bo
 
 MString ResToText::DoUnknown(const EntryBase& entry, bool pseudolocalize)
 {
-    if (pseudolocalize && _wcsicmp(entry.m_type.c_str(), L"MUI") == 0)return L"";
+    
     MStringW GetResTypeEncoding(const MIdOrString& type);
 
     MStringW enc = GetResTypeEncoding(entry.m_type);

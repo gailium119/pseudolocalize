@@ -384,11 +384,13 @@ MStringW DialogItem::DumpControl(MStringW& cls,bool pseudolocalize) const
     }
 
     ret += L", ";
-    ret += mstr_dec_short((SHORT)m_pt.x);
+    if(pseudolocalize)    ret += mstr_dec_short((SHORT)(m_pt.x*1.4));
+    else  ret += mstr_dec_short((SHORT)m_pt.x);
     ret += L", ";
     ret += mstr_dec_short((SHORT)m_pt.y);
     ret += L", ";
-    ret += mstr_dec_short((SHORT)m_siz.cx);
+    if (pseudolocalize)    ret += mstr_dec_short((SHORT)(m_siz.cx * 1.4));
+    else ret += mstr_dec_short((SHORT)m_siz.cx);
     ret += L", ";
     ret += mstr_dec_short((SHORT)m_siz.cy);
     if (m_ex_style || m_help_id)
@@ -447,14 +449,16 @@ DialogItem::_do_CONTROL(bool bNeedsText,
 
     ret += g_db.GetNameOfResID(IDTYPE_CONTROL, m_id);
     ret += L", ";
-    ret += mstr_dec_short((SHORT)m_pt.x);
+    if (pseudolocalize)    ret += mstr_dec_short((SHORT)(m_pt.x * 1.4));
+    else ret += mstr_dec_short((SHORT)m_pt.x);
     ret += L", ";
     ret += mstr_dec_short((SHORT)m_pt.y);
     // NOTE: Don't omit cx and cy! Visual Studio 2017 won't accept omission.
     //if (!IsStaticIcon() || m_siz.cx || m_siz.cy || m_style != DefStyle || m_ex_style || m_help_id)
     {
         ret += L", ";
-        ret += mstr_dec_short((SHORT)m_siz.cx);
+        if (pseudolocalize)    ret += mstr_dec_short((SHORT)(m_siz.cx * 1.4)); 
+        else ret += mstr_dec_short((SHORT)m_siz.cx);
         ret += L", ";
         ret += mstr_dec_short((SHORT)m_siz.cy);
     }
@@ -861,12 +865,14 @@ MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl,bool 
     }
 
     // NOTE: windres can't read negative x and y. It must be unsigned.
-    ret += mstr_dec_word((WORD)m_pt.x);
+    if (pseudolocalize)    ret += mstr_dec_word((WORD)(m_pt.x * 1.4));
+    else ret += mstr_dec_word((WORD)m_pt.x);
     ret += L", ";
     ret += mstr_dec_word((WORD)m_pt.y);
     ret += L", ";
 
-    ret += mstr_dec_short((SHORT)m_siz.cx);
+    if (pseudolocalize)    ret += mstr_dec_word((WORD)(m_siz.cx * 1.4));
+    else ret += mstr_dec_short((SHORT)m_siz.cx);
     ret += L", ";
     ret += mstr_dec_short((SHORT)m_siz.cy);
     if (IsExtended() && m_help_id)
