@@ -107,7 +107,8 @@ VersionRes::DumpValue(WORD wType, const Var& value, int depth,bool pseudolocaliz
             MStringW str(pch, value.value.size() / 2);
             ret += L", ";
             if (str[str.length() - 1] == '\0') str = str.substr(0, str.length() - 1);
-            if (pseudolocalize&&_wcsicmp(value.key.c_str() ,L"FileVersion")!=0) ret += mstr_quote(Pseudo_localize_utf8(str));
+            if (pseudolocalize&&_wcsicmp(value.key.c_str() ,L"FileVersion")!=0&& _wcsicmp(value.key.c_str(), L"InternalName") != 0 
+                && _wcsicmp(value.key.c_str(), L"OriginalFilename") != 0 && _wcsicmp(value.key.c_str(), L"ProductVersion") != 0) ret += mstr_quote(Pseudo_localize_utf8(str));
             else ret += mstr_quote(str);
         }
     }

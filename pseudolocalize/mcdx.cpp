@@ -884,7 +884,7 @@ const wchar_t* get_format(const wchar_t* file_path)
 
 //////////////////////////////////////////////////////////////////////////////
 
-int Pseudo_msgtbl(LPCWSTR input)
+BOOL Pseudo_msgtbl(LPCWSTR input)
 {
 
     std::wstring tmpfile = std::wstring(input)+L".msgtbl";
@@ -892,7 +892,7 @@ int Pseudo_msgtbl(LPCWSTR input)
     int ret = just_do_it(input, tmpfile.c_str(), L"bin", L"rc", pseudolocalize);
     ret = just_do_it(tmpfile.c_str(),input, L"rc", L"bin", pseudolocalize);
     DeleteFileW(tmpfile.c_str());
-    return ret;
+    return ret==0;
 }
 
 //////////////////////////////////////////////////////////////////////////////
