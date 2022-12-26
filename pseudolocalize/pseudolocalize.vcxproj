@@ -145,6 +145,7 @@
     <ClCompile Include="DialogRes.cpp" />
     <ClCompile Include="DlgInitRes.cpp" />
     <ClCompile Include="IconRes.cpp" />
+    <ClCompile Include="mcdx.cpp" />
     <ClCompile Include="MenuRes.cpp" />
     <ClCompile Include="PackedDIB.cpp" />
     <ClCompile Include="pseudo.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="MBitmapDx.hpp" />
     <ClInclude Include="MByteStream.hpp" />
     <ClInclude Include="MByteStreamEx.hpp" />
+    <ClInclude Include="mcdx.h" />
     <ClInclude Include="MenuRes.hpp" />
     <ClInclude Include="MessageRes.hpp" />
     <ClInclude Include="MFile.hpp" />
@@ -193,9 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="toolbar2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

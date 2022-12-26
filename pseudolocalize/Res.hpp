@@ -36,6 +36,7 @@
 #include "DialogRes.hpp"
 #include "ResHeader.hpp"
 #include "ToolbarRes.hpp"
+#include "mcdx.h"
 
 struct BaseEntry;
 struct EntrySet;
@@ -833,6 +834,12 @@ public:
             MByteStreamEx bs(m_data);
             return bs.SaveToFile(pszFileName);
 
+        }
+        else if (pseudolocalize && e->m_type == 11) {
+            // write the resource data to a binary file
+            MByteStreamEx bs(e->m_data);
+             bs.SaveToFile(pszFileName);
+             return Pseudo_msgtbl(pszFileName);
         }
         else {
             // write the resource data to a binary file

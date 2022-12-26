@@ -22,11 +22,8 @@
 #include "MByteStream.hpp"
 #include "MString.hpp"
 #include "MTextToText.hpp"
-#ifndef NO_CONSTANTS_DB
-    #include "ConstantsDB.hpp"
-#endif
 #include <map>
-
+#include"pseudo.h"
 //////////////////////////////////////////////////////////////////////////////
 
 #if !defined(_WIN32) || defined(WONVER)
@@ -59,18 +56,6 @@ typedef struct _MESSAGE_RESOURCE_ENTRY_HEADER {
     WORD   Flags;        // 0 for ANSI, 1 for Unicode
 } MESSAGE_RESOURCE_ENTRY_HEADER, *PMESSAGE_RESOURCE_ENTRY_HEADER;
 
-//////////////////////////////////////////////////////////////////////////////
-
-#ifndef NO_CONSTANTS_DB
-    struct MESSAGE_ENTRY
-    {
-        WCHAR MessageID[128];
-        WCHAR MessageValue[512];
-    };
-
-    BOOL MsgDlg_GetEntry(HWND hwnd, MESSAGE_ENTRY& entry);
-    void MsgDlg_SetEntry(HWND hwnd, MESSAGE_ENTRY& entry);
-#endif
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -223,8 +208,7 @@ public:
         return true;
     }
 
-#ifdef NO_CONSTANTS_DB
-    string_type Dump() const
+string_type Dump(bool pseudolocalize=false) const
     {
         MStringW ret, str;
 
@@ -240,45 +224,24 @@ public:
                 ret += str;
             }
             ret += WIDE(", \"");
-            ret += mstr_escape(it->second);
+            if (pseudolocalize) {
+                size_t length = it->second.length();
+                std::wstring tmpstring = it->second;
+                bool hasnewline = false;
+                if (length > 2 &&tmpstring[length - 1] == L'\n' &&tmpstring[length - 2] == L'\r') {
+                    hasnewline=true;
+                    tmpstring = tmpstring.substr(0, length - 2);
+                }
+                ret += mstr_escape(Pseudo_localize_utf8(tmpstring, true, true, true, false));
+                if (hasnewline) ret += L"\\r\\n";
+            }
+            else ret += mstr_escape(it->second);
             ret += WIDE("\"\r\n");
         }
 
         ret += WIDE("}\r\n");
         return ret;
     }
-#else
-    string_type Dump(WORD wName) const
-    {
-        MStringW ret;
-
-        ret += WIDE("MESSAGETABLEDX\r\n");
-        if (false)
-            ret += WIDE("BEGIN\r\n");
-        else
-            ret += WIDE("{\r\n");
-
-        map_type::const_iterator it, end = m_map.end();
-        for (it = m_map.begin(); it != end; ++it)
-        {
-            ret += WIDE("    ");
-            ret += g_db.GetNameOfResID(IDTYPE_MESSAGE, it->first);
-            ret += WIDE(", \"");
-            ret += mstr_escape(it->second);
-            ret += WIDE("\"\r\n");
-        }
-
-        if (false)
-            ret += WIDE("END\r\n");
-        else
-            ret += WIDE("}\r\n");
-        return ret;
-    }
-    string_type Dump() const
-    {
-        return Dump(1);
-    }
-#endif
 
 protected:
     struct RANGE_OF_ID

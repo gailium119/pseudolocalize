@@ -300,7 +300,7 @@ BOOL DoExtract(const EntryBase* entry, BOOL bExporting, bool pseudolocalize=fals
         }
         if (wType == (WORD)(UINT_PTR)RT_MESSAGETABLE)
         {
-            return g_res.extract_bin(filename.c_str(), entry);
+            return g_res.extract_bin(filename.c_str(), entry,pseudolocalize);
 
         }
         if (wType == (WORD)(UINT_PTR)RT_GROUP_CURSOR)

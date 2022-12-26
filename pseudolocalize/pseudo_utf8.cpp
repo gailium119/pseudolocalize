@@ -59,7 +59,7 @@ namespace pseudo_utf8
 #define random(x)(rand()%x)
 
 using namespace pseudo_utf8;
-std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true) {
+std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true,bool genidwithnewline=true) {
     std::wstring after;
     wchar_t buffer[5] = L"";
     for (int cnt = 0; cnt <= 4; cnt++) {
@@ -129,7 +129,11 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
         case 'X': out = X[random(4)]; break;
         case 'Y': out = Y[random(8)]; break;
         case 'Z': out = Z[random(4)]; break;
-        case '\n':out = std::wstring(L"\n") + L"[" + buf + L"]"; break;
+        case '\n': {
+            if (genid && genidwithnewline) out = std::wstring(L"\n") + L"[" + buf + L"]";
+            else out = L"\n"; 
+            break;
+        }
         case '%': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
