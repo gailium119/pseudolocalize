@@ -4,6 +4,7 @@
 #include <windows.h>
 #include "pseudo.h"
 #include <time.h>
+#include "xml.h"
 int wmain(int argc, wchar_t** argv)
 {
     SetConsoleCP(65001)
@@ -16,6 +17,7 @@ int wmain(int argc, wchar_t** argv)
         wprintf(L"pseudotest.exe string [string]\n");
         wprintf(L"pseudotest.exe file [filename]\n");
         wprintf(L"pseudotest.exe rc [inputmui] [outputrc]\n");
+        wprintf(L"pseudotest.exe xml [filename]\n");
         return 0;
     }
     if (_wcsicmp(argv[1], L"string") == 0) {
@@ -30,6 +32,27 @@ int wmain(int argc, wchar_t** argv)
             wprintf(L"Invalid Usage\npseudotest.exe rc [inputmui] [outputrc]");
         }
         ExportRC(argv[2],argv[3],true);
+    }
+    else if (_wcsicmp(argv[1], L"xml") == 0) {
+        CoInitialize(0);
+        std::vector<std::wstring> textxpaths;
+        std::vector<std::pair<std::wstring, std::wstring>>attrxpaths;
+        textxpaths.push_back(L"//String");
+        MyXmlDoc doc;
+        doc.Load(argv[2]);
+        MyXmlElementTable table;
+        table.SelectFromDocument(doc, L"//_locTag");
+        auto elements = table.GetElements();
+        for (int cnt = 0; cnt < elements.size(); cnt++) {
+            std::wstring keyname = std::wstring(L"//") + elements[cnt].GetText();
+            std::wstring attrname = elements[cnt].GetAttr(L"_locAttrData");
+            attrxpaths.push_back(std::make_pair(keyname, attrname));
+            elements[cnt].Release();
+        }
+
+        table.Release();
+        doc.Release();
+        Pseudo_xml(argv[2], textxpaths, attrxpaths,false);
     }
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");

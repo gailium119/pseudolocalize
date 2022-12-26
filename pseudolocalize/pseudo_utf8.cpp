@@ -1,4 +1,6 @@
 ﻿#include <string>
+#include"xml.h"
+#include<fstream>
 namespace pseudo_utf8
 {
 	std::wstring a[16] = { L"ª", L"à", L"á", L"â", L"ã", L"ä", L"å", L"ă", L"ā", L"ą", L"ǻ", L"ά", L"α", L"а", L"д", L"∆" };
@@ -57,9 +59,18 @@ namespace pseudo_utf8
 
 }
 #define random(x)(rand()%x)
-
+std::wstring& replace_all(std::wstring& src, const std::wstring& old_value, const std::wstring& new_value) {
+    // 每次重新定位起始位置，防止上轮替换后的字符串形成新的old_value
+    for (std::wstring::size_type pos(0); pos != std::wstring::npos; pos += new_value.length()) {
+        if ((pos = src.find(old_value, pos)) != std::wstring::npos) {
+            src.replace(pos, old_value.length(), new_value);
+        }
+        else break;
+    }
+    return src;
+}
 using namespace pseudo_utf8;
-std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true,bool genidwithnewline=true) {
+std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true,bool genidwithnewline=true, bool skipempty=false) {
     std::wstring after;
     wchar_t buffer[5] = L"";
     for (int cnt = 0; cnt <= 4; cnt++) {
@@ -173,6 +184,14 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
         }
         after += out;
     }
+    bool isempty = true;
+    for (int cnt = 0; cnt < after.length(); cnt++) {
+        if (after[cnt]!=' '&& after[cnt]!='\t' && after[cnt] != '\0' && after[cnt] != '\n' && after[cnt] != '\r') {
+            isempty = false;
+        }
+    }
+   isempty= isempty || (after.length() == 0);
+   if (isempty && skipempty)return str;
     if (nolower&&hasunderline) {
         // supposingly a macro
         return str;
@@ -189,4 +208,205 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
     if (wraparound) after = std::wstring(L"[") + after + L"]";
     if (genid)after = buf + after;
     return after;
+}
+std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true, bool genidwithnewline = true, bool skipempty = false) {
+    //Process &lt
+    replace_all(str,L"&lt;", L"<");
+    replace_all(str, L"&gt;", L">");
+
+    std::wstring after;
+    wchar_t buffer[5] = L"";
+    for (int cnt = 0; cnt <= 4; cnt++) {
+
+        buffer[cnt] = charset[random(62)];
+    }
+    if (str.length() > 10 && str[0] == '<' && str[1] == '?' && str[2] == 'x' && str[3] == 'm' && str[4] == 'l') {
+        // an xml file
+        return str;
+    }
+    std::wstring buf = std::wstring(buffer, 5);
+    int len = str.length();
+    bool nolower = true;
+    bool hasunderline = false;
+    int reallen = 0;
+    for (int cnt = 0; cnt < len; cnt++) {
+        std::wstring out;
+        ++reallen;
+        switch (str[cnt]) {
+        case 'a': out = a[random(16)]; nolower = false; break;
+        case 'b': out = b[random(3)];  nolower = false; break;
+        case 'c': out = c[random(8)]; nolower = false; break;
+        case 'd': out = d[random(4)];  nolower = false; break;
+        case 'e': out = e[random(17)]; nolower = false; break;
+        case 'f': out = f[random(1)]; nolower = false; break;
+        case 'g': out = g[random(4)]; nolower = false; break;
+        case 'h': out = h[random(5)]; nolower = false; break;
+        case 'i': out = i[random(14)]; nolower = false; break;
+        case 'j': out = j[random(2)];  nolower = false; break;
+        case 'k': out = k[random(5)]; nolower = false; break;
+        case 'l': out = l[random(6)]; nolower = false; break;
+        case 'm': out = m[random(3)];  nolower = false; break;
+        case 'n': out = n[random(14)]; nolower = false; break;
+        case 'o': out = o[random(17)]; nolower = false; break;
+        case 'p': out = p[random(3)]; nolower = false; break;
+        case 'q': out = q[random(1)]; nolower = false; break;
+        case 'r': out = r[random(7)]; nolower = false; break;
+        case 's': out = s[random(5)]; nolower = false; break;
+        case 't': out = t[random(5)]; nolower = false; break;
+        case 'u': out = u[random(18)]; nolower = false; break;
+        case 'v': out = v[random(2)]; nolower = false; break;
+        case 'w': out = w[random(8)]; nolower = false; break;
+        case 'x': out = x[random(3)]; nolower = false; break;
+        case 'y': out = y[random(7)];  nolower = false; break;
+        case 'z': out = z[random(3)];  nolower = false; break;
+        case 'A': out = A[random(16)]; break;
+        case 'B': out = B[random(7)]; break;
+        case 'C': out = C[random(7)]; break;
+        case 'D': out = D[random(3)]; break;
+        case 'E': out = E[random(18)]; break;
+        case 'F': out = F[random(1)]; break;
+        case 'G': out = G[random(4)]; break;
+        case 'H': out = H[random(5)]; break;
+        case 'I': out = I[random(12)]; break;
+        case 'J': out = J[random(2)]; break;
+        case 'K': out = K[random(4)]; break;
+        case 'L': out = L[random(7)]; break;
+        case 'M': out = M[random(2)]; break;
+        case 'N': out = N[random(11)]; break;
+        case 'O': out = O[random(18)]; break;
+        case 'P': out = P[random(3)]; break;
+        case 'Q': out = Q[random(1)]; break;
+        case 'R': out = R[random(8)]; break;
+        case 'S': out = S[random(5)]; break;
+        case 'T': out = T[random(5)]; break;
+        case 'U': out = U[random(12)]; break;
+        case 'V': out = V[random(1)]; break;
+        case 'W': out = W[random(5)]; break;
+        case 'X': out = X[random(4)]; break;
+        case 'Y': out = Y[random(8)]; break;
+        case 'Z': out = Z[random(4)]; break;
+        case '\n': {
+            if (genid && genidwithnewline) out = std::wstring(L"\n") + L"[" + buf + L"]";
+            else out = L"\n";
+            break;
+        }
+        case '%': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt] != 'l' && str[cnt] != 'W') {
+                    break;
+                }
+                if (str[cnt] == 'W') {
+                    for (cnt++; cnt < len; cnt++) {
+                        out += str[cnt];
+                        if (str[cnt] == '%') break;
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case '<': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] == '>') {
+                    break;
+                }
+            }
+            break;
+        }
+        case '&': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] >= 'A' && str[cnt] <= 'z') {
+                    break;
+                }
+            }
+            break;
+        }
+        case '_':hasunderline = true; out = str[cnt]; break;
+        default: out = str[cnt]; break;
+        }
+        after += out;
+    }
+    bool isempty = true;
+    for (int cnt = 0; cnt < after.length(); cnt++) {
+        if (after[cnt] != ' ' && after[cnt] != '\t' && after[cnt] != '\0' && after[cnt] != '\n' && after[cnt] != '\r' && after[cnt] != ' ') {
+            isempty = false;
+        }
+    }
+    isempty = isempty || (after.length() == 0);
+    if (isempty && skipempty)return str;
+    if (nolower && hasunderline) {
+        // supposingly a macro
+        return str;
+    }
+    //wrap
+    if (extend) {
+        int lencnt = (int)floor(reallen * 3.0 / 10.0 + 0.5);
+        for (int cnt = 1; cnt <= lencnt; cnt++) {
+            if (cnt % 4 == 1) after += L" ";
+            else after += L"!";
+        }
+    }
+    buf = std::wstring(L"[") + buf + L"]";
+    if (wraparound) after = std::wstring(L"[") + after + L"]";
+    if (genid)after = buf + after;
+    return after;
+}
+
+void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector<std::pair<std::wstring,std::wstring>>attrxpaths,bool dirty=true) {
+    MyXmlDoc doc;
+    doc.Load(xmlpath);
+    for (int cnt = 0; cnt < textxpaths.size(); cnt++)
+    {
+        MyXmlElementTable table;
+        table.SelectFromDocument(doc, textxpaths[cnt].c_str());
+        auto elements = table.GetElements();
+        for (int cnt2 = 0; cnt2 < elements.size(); cnt2 ++ ) {
+            std::wstring str; 
+            if(dirty)str= elements[cnt2].GetTextDirty();
+            else str = elements[cnt2].GetText();
+            if(!str.empty())elements[cnt2].SetText(Pseudo_localize_utf8_xml(str, true, true, true, false, true));
+            elements[cnt2].Release();
+        }
+        table.Release();
+    }
+    doc.Save(xmlpath);
+    doc.Release();
+    if (dirty) {
+        std::wstring buffer;
+        std::wifstream in(xmlpath);
+        std::vector<std::wstring> fullfile;
+        if (in) // 有该文件
+        {
+            while (std::getline(in, buffer)) // line中不包括每行的换行符
+            {
+                replace_all(buffer, L"&lt;", L"<");
+                replace_all(buffer, L"&gt;", L">");
+
+                fullfile.push_back((buffer));
+            }
+        }
+        in.close();
+        std::wofstream out(xmlpath);
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            out << fullfile[cnt] << std::endl;
+        }
+        out.close();
+    }
+    doc.Load(xmlpath);
+    for (int cnt = 0; cnt < attrxpaths.size(); cnt++)
+    {
+        MyXmlElementTable table;
+        table.SelectFromDocument(doc, attrxpaths[cnt].first.c_str());
+        auto elements = table.GetElements();
+        for (int cnt2 = 0; cnt2 < elements.size(); cnt2++) {
+          if(_wcsicmp(elements[cnt2].GetAttr(L"type").c_str(), L"string") == 0) elements[cnt2].SetAttr(attrxpaths[cnt].second, Pseudo_localize_utf8(elements[cnt2].GetAttr(attrxpaths[cnt].second), true, true, true, false, true));
+            elements[cnt2].Release();
+        }
+        table.Release();
+    }
+    doc.Save(xmlpath);
+    doc.Release();
 }

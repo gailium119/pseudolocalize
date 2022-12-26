@@ -157,6 +157,7 @@
     <ClCompile Include="StringRes.cpp" />
     <ClCompile Include="ToolbarRes.cpp" />
     <ClCompile Include="VersionRes.cpp" />
+    <ClCompile Include="Xml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccelRes.hpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="ToolbarRes.hpp" />
     <ClInclude Include="VersionRes.hpp" />
+    <ClInclude Include="xml.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
