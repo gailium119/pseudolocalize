@@ -459,9 +459,20 @@ void Pseudo_inf_utf16(std::wstring path) {
     FILE* fp;
     _wfopen_s(&fp, L"D:\\1.txt", L"w, ccs=UTF-16LE");
     if (fp) {
-
+        bool pseudolocalize = false;
         for (int cnt = 0; cnt < fullfile.size(); cnt++) {
             replace_all(fullfile[cnt], L"\r", L"");
+            if (_wcsicmp(fullfile[cnt].c_str(), L"[Strings.0804]") == 0)fullfile[cnt] = L"[Strings.0501]";
+            if (!fullfile[cnt].empty()&&fullfile[cnt][0] == ';') {
+                if (fullfile[cnt].find(L"ocalizable") != std::wstring::npos) {
+                    if (fullfile[cnt].find(L"on") == std::wstring::npos) pseudolocalize = true;
+                    else pseudolocalize = false;
+                }
+            }
+            else if (!fullfile[cnt].empty() && pseudolocalize) {
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"\"");
+            }
             fwprintf_s(fp, L"%ls\n", fullfile[cnt].c_str());
         }
         fclose(fp);
