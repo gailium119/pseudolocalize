@@ -21,6 +21,7 @@ int wmain(int argc, wchar_t** argv)
         wprintf(L"pseudotest.exe adml [filename]\n");
         wprintf(L"pseudotest.exe infloc [filename]\n");
         wprintf(L"pseudotest.exe ini [filename]\n");
+        wprintf(L"pseudotest.exe mfl [filename]\n");
         return 0;
     }
     if (_wcsicmp(argv[1], L"string") == 0) {
@@ -75,6 +76,7 @@ int wmain(int argc, wchar_t** argv)
     }
     else if (_wcsicmp(argv[1], L"infloc") == 0) Pseudo_inf(argv[2]);
     else if (_wcsicmp(argv[1], L"ini") == 0) Pseudo_ini(argv[2]);
+    else if (_wcsicmp(argv[1], L"mfl") == 0) Pseudo_mfl(argv[2]);
 
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");
