@@ -3,6 +3,7 @@
 #include<fstream>
 #include <codecvt>
 #include "MString.hpp"
+#include "pseudo.h"
 namespace pseudo_utf8
 {
 	std::wstring a[16] = { L"ª", L"à", L"á", L"â", L"ã", L"ä", L"å", L"ă", L"ā", L"ą", L"ǻ", L"ά", L"α", L"а", L"д", L"∆" };
@@ -72,7 +73,7 @@ std::wstring& replace_all(std::wstring& src, const std::wstring& old_value, cons
     return src;
 }
 using namespace pseudo_utf8;
-std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true,bool genidwithnewline=true, bool skipempty=false) {
+std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound, bool extend,bool genidwithnewline, bool skipempty) {
     std::wstring after;
     wchar_t buffer[5] = L"";
     for (int cnt = 0; cnt <= 4; cnt++) {
@@ -211,7 +212,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
     if (genid)after = buf + after;
     return after;
 }
-std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid = true, bool wraparound = true, bool extend = true, bool genidwithnewline = true, bool skipempty = false) {
+std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid, bool wraparound, bool extend, bool genidwithnewline, bool skipempty) {
     //Process &lt
     replace_all(str,L"&lt;", L"<");
     replace_all(str, L"&gt;", L">");
@@ -357,7 +358,7 @@ std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid = true, bool 
     return after;
 }
 
-void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector<std::pair<std::wstring,std::wstring>>attrxpaths,bool dirty=true) {
+void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector<std::pair<std::wstring,std::wstring>>attrxpaths,bool dirty) {
     MyXmlDoc doc;
     doc.Load(xmlpath);
     for (int cnt = 0; cnt < textxpaths.size(); cnt++)
@@ -455,9 +456,10 @@ void Pseudo_inf_utf16(std::wstring path) {
     utf8.clear();
     std::vector<std::wstring> fullfile;
     mstr_split(fullfile, widestring, L"\n");
-    widestring.clear();
+    widestring.clear();    fin.close();
+
     FILE* fp;
-    _wfopen_s(&fp, L"D:\\1.txt", L"w, ccs=UTF-16LE");
+    _wfopen_s(&fp, path.c_str() , L"w, ccs=UTF-16LE");
     if (fp) {
         bool pseudolocalize = false;
         for (int cnt = 0; cnt < fullfile.size(); cnt++) {
@@ -486,4 +488,153 @@ void Pseudo_inf_utf16(std::wstring path) {
     }
     return;
 
+}
+void Pseudo_ini_utf16(std::wstring path) {
+    std::u16string buffer;
+    std::ifstream fin(path, std::ios::binary);
+    fin.seekg(0, std::ios::end);
+    size_t size = (size_t)fin.tellg();
+
+    //skip BOM
+    fin.seekg(2, std::ios::beg);
+    size -= 2;
+
+    std::u16string u16((size / 2) + 1, '\0');
+    fin.read((char*)&u16[0], size);
+
+    std::string utf8 = std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16);
+    std::wstring widestring = MAnsiToWide(65001, utf8).c_str();
+    utf8.clear();
+    std::vector<std::wstring> fullfile;
+    mstr_split(fullfile, widestring, L"\n");
+    widestring.clear();
+    fin.close();
+    FILE* fp;
+    _wfopen_s(&fp, path.c_str(), L"w, ccs=UTF-16LE");
+    if (fp) {
+        bool pseudolocalize = false;
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L"");
+            if (fullfile[cnt].find(L"009=") != std::wstring::npos&& !pseudolocalize) fullfile[cnt] = L"101=UNASSIGNED LANGUAGE ID";
+            if (!fullfile[cnt].empty() && fullfile[cnt][0] == '[') {
+                if (fullfile[cnt].find(L"bjects") != std::wstring::npos|| fullfile[cnt].find(L"ext") != std::wstring::npos) {
+                    pseudolocalize = true;
+                  
+                }  else pseudolocalize = false;
+            }
+            else if (!fullfile[cnt].empty() && pseudolocalize) {
+                replace_all(fullfile[cnt], L"009", L"101");
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"=");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1&&fullfile[cnt].find(L"_000_") == std::wstring::npos) fullfile[cnt] += Pseudo_localize_utf8(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"=";
+                }
+            }
+            fwprintf_s(fp, L"%ls\n", fullfile[cnt].c_str());
+        }
+        fclose(fp);
+    }
+    return;
+
+}
+void Pseudo_inf_utf8(std::wstring path) {
+    std::wstring buffer;
+    std::wifstream in(path);
+    std::vector<std::wstring> fullfile;
+    if (in) // 有该文件
+    {
+        while (std::getline(in, buffer)) // line中不包括每行的换行符
+        {
+            fullfile.push_back((buffer));
+        }
+    }
+    in.close();
+    std::wofstream out(path);
+    if (out) {
+        bool pseudolocalize = false;
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L"");
+            if (_wcsicmp(fullfile[cnt].c_str(), L"[Strings.0409]") == 0)fullfile[cnt] = L"[Strings.0501]";
+            if (!fullfile[cnt].empty() && fullfile[cnt][0] == ';') {
+                if (fullfile[cnt].find(L"ocalizable") != std::wstring::npos) {
+                    if (fullfile[cnt].find(L"on") == std::wstring::npos) pseudolocalize = true;
+                    else pseudolocalize = false;
+                }
+            }
+            else if (!fullfile[cnt].empty() && pseudolocalize) {
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"\"");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1) fullfile[cnt] += Pseudo_localize_utf8(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"\"";
+                }
+            }
+            out << fullfile[cnt].c_str() << std::endl;
+        }
+        out.close();
+    }
+    return;
+
+}
+void Pseudo_ini_utf8(std::wstring path) {
+    std::wstring buffer;
+    std::wifstream in(path);
+    std::vector<std::wstring> fullfile;
+    if (in) // 有该文件
+    {
+        while (std::getline(in, buffer)) // line中不包括每行的换行符
+        {
+            fullfile.push_back((buffer));
+        }
+    }
+    in.close();
+    std::wofstream out(path);
+    if (out) {
+        bool pseudolocalize = false;
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L"");
+            if (fullfile[cnt].find(L"009=") != std::wstring::npos && !pseudolocalize) fullfile[cnt] = L"101=UNASSIGNED LANGUAGE ID";
+            if (!fullfile[cnt].empty() && fullfile[cnt][0] == '[') {
+                if (fullfile[cnt].find(L"bjects") != std::wstring::npos || fullfile[cnt].find(L"ext") != std::wstring::npos) {
+                    pseudolocalize = true;
+
+                }
+                else pseudolocalize = false;
+            }
+            else if (!fullfile[cnt].empty() && pseudolocalize) {
+                replace_all(fullfile[cnt], L"009", L"101");
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"=");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1 && fullfile[cnt].find(L"_000_") == std::wstring::npos) fullfile[cnt] += Pseudo_localize(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"=";
+                }
+            }
+            out<< fullfile[cnt].c_str()<<std::endl;
+        }
+        out.close();
+    }
+    return;
+
+}
+
+void Pseudo_inf(std::wstring path) {
+    if (IsUTF16File(path.c_str())) Pseudo_inf_utf16(path);
+    else  Pseudo_inf_utf8(path);
+}
+
+void Pseudo_ini(std::wstring path) {
+    if (IsUTF16File(path.c_str())) Pseudo_ini_utf16(path);
+    else  Pseudo_ini_utf8(path);
 }

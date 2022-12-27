@@ -67,41 +67,6 @@ namespace pseudo {
     std::wstring charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 }
 using namespace pseudo;
-std::wstring UTF16WStringLineToWstring(std::wstring utf16line)
-{
-    std::wstring result = L"";
-    for (int i = 0; i < utf16line.length() - 1; i += 2)
-    {
-        unsigned char c1 = utf16line[i];
-        unsigned char c2 = utf16line[static_cast<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t>>::size_type>(i) + 1];
-        unsigned short wc;
-        if (c2 == 0)
-        {
-            wc = c1;
-        }
-        else
-        {
-            wc = c2;
-            wc = wc << 8;
-            wc += c1;
-        }
-        result += wc;
-    }
-    return result;
-}
-std::wstring UTF16WStringToWString(std::wstring utf16wline)
-{
-    std::wstring result = L"";
-    for (int i = 0; i < utf16wline.length(); i++)
-    {
-        wchar_t wc = utf16wline[i];
-        unsigned char c1 = wc & 0x00ff;
-        unsigned char c2 = (wc >> 8);
-        result += c1;
-        result += c2;
-    }
-    return result;
-}
 std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=true,bool extend=true) {
     std::wstring after;
     wchar_t buffer[5] = L"";
@@ -172,7 +137,6 @@ std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=t
         }
         after += out;
     }
-    wprintf(L"%ls\n", after.c_str());
     if (nolower) {
         // supposingly a macro
         return str;
@@ -247,7 +211,7 @@ void Pseudo_file(std::wstring path) {
     {
         while (std::getline(in, buffer)) // line中不包括每行的换行符
         {
-            fullfile.push_back(UTF16WStringToWString(buffer));
+            fullfile.push_back(Pseudo_localize(buffer));
         }
     }
     in.close();

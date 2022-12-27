@@ -19,6 +19,8 @@ int wmain(int argc, wchar_t** argv)
         wprintf(L"pseudotest.exe rc [inputmui] [outputrc]\n");
         wprintf(L"pseudotest.exe xml [filename]\n");
         wprintf(L"pseudotest.exe adml [filename]\n");
+        wprintf(L"pseudotest.exe infloc [filename]\n");
+        wprintf(L"pseudotest.exe ini [filename]\n");
         return 0;
     }
     if (_wcsicmp(argv[1], L"string") == 0) {
@@ -71,7 +73,9 @@ int wmain(int argc, wchar_t** argv)
         textxpaths.push_back(L"//text");
         Pseudo_xml(argv[2], textxpaths, attrxpaths, false);
     }
-    else if (_wcsicmp(argv[1], L"infloc") == 0) Pseudo_inf_utf16(argv[2]);
+    else if (_wcsicmp(argv[1], L"infloc") == 0) Pseudo_inf(argv[2]);
+    else if (_wcsicmp(argv[1], L"ini") == 0) Pseudo_ini(argv[2]);
+
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");
     return 0;
