@@ -705,29 +705,6 @@ int save_bin(const wchar_t* output_file)
     return EXITCODE_SUCCESS;
 }
 
-bool IsUTF16File(const wchar_t* input_file)
-{
-    if (FILE* fp = _wfopen(input_file, L"rb"))
-    {
-        wchar_t ab[2];
-        if (fread(ab, 1, 2, fp) == 2)
-        {
-            if (memcmp(ab, "\xFF\xFE", 2) == 0)
-            {
-                fclose(fp);
-                return true;
-            }
-            if (ab[0] && !ab[1])
-            {
-                fclose(fp);
-                return true;
-            }
-        }
-        fclose(fp);
-    }
-    return false;
-}
-
 int load_rc(const wchar_t* input_file)
 {
   

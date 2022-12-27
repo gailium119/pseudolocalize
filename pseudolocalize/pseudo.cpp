@@ -6,6 +6,9 @@
 #include <string>
 #include<vector>
 #include <iostream>
+#include <locale>
+#include<codecvt>
+#include "MString.hpp"
 #pragma warning(disable:4996)
 #define random(x)(rand()%x)
 namespace pseudo {
@@ -64,6 +67,41 @@ namespace pseudo {
     std::wstring charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 }
 using namespace pseudo;
+std::wstring UTF16WStringLineToWstring(std::wstring utf16line)
+{
+    std::wstring result = L"";
+    for (int i = 0; i < utf16line.length() - 1; i += 2)
+    {
+        unsigned char c1 = utf16line[i];
+        unsigned char c2 = utf16line[static_cast<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t>>::size_type>(i) + 1];
+        unsigned short wc;
+        if (c2 == 0)
+        {
+            wc = c1;
+        }
+        else
+        {
+            wc = c2;
+            wc = wc << 8;
+            wc += c1;
+        }
+        result += wc;
+    }
+    return result;
+}
+std::wstring UTF16WStringToWString(std::wstring utf16wline)
+{
+    std::wstring result = L"";
+    for (int i = 0; i < utf16wline.length(); i++)
+    {
+        wchar_t wc = utf16wline[i];
+        unsigned char c1 = wc & 0x00ff;
+        unsigned char c2 = (wc >> 8);
+        result += c1;
+        result += c2;
+    }
+    return result;
+}
 std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=true,bool extend=true) {
     std::wstring after;
     wchar_t buffer[5] = L"";
@@ -72,7 +110,7 @@ std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=t
         buffer[cnt] = charset[random(62)];
     }
     std::wstring buf = std::wstring(buffer, 5);
-    int len = str.length();
+    size_t len = str.length();
     bool nolower = true;
     for (int cnt = 0; cnt < len; cnt++) {
         std::wstring out;
@@ -163,8 +201,8 @@ void ReadData1(std::wstring path) {
             wprintf(L"std::wstring %c", buffer[0]);
             buffer = buffer.substr(buffer.find(L',') + 1);
             //std::wcout << buffer << std::endl; 
-            int len = buffer.length();
-            for (int i = 0; i < len; i++) {
+            size_t len = buffer.length();
+            for (size_t i = 0; i < len; i++) {
                 if (buffer[i] == L',') { cnt += 1; }
             }
             wprintf(L"[%d] = {L\"", cnt);
@@ -190,8 +228,8 @@ void ReadData2(std::wstring path) {
             wprintf(L"case \'%c\' : out = %c[random(", buffer[0], buffer[0]);
             buffer = buffer.substr(buffer.find(L',') + 1);
             //std::wcout << buffer << std::endl; 
-            int len = buffer.length();
-            for (int i = 0; i < len; i++) {
+            size_t len = buffer.length();
+            for (size_t i = 0; i < len; i++) {
                 if (buffer[i] == L',') { cnt += 1; }
             }
             wprintf(L"%d)]; break;", cnt);
@@ -209,7 +247,7 @@ void Pseudo_file(std::wstring path) {
     {
         while (std::getline(in, buffer)) // line中不包括每行的换行符
         {
-            fullfile.push_back(Pseudo_localize(buffer));
+            fullfile.push_back(UTF16WStringToWString(buffer));
         }
     }
     in.close();

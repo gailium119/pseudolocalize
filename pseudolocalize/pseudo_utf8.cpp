@@ -1,6 +1,8 @@
 ﻿#include <string>
 #include"xml.h"
 #include<fstream>
+#include <codecvt>
+#include "MString.hpp"
 namespace pseudo_utf8
 {
 	std::wstring a[16] = { L"ª", L"à", L"á", L"â", L"ã", L"ä", L"å", L"ă", L"ā", L"ą", L"ǻ", L"ά", L"α", L"а", L"д", L"∆" };
@@ -409,4 +411,61 @@ void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector
     }
     doc.Save(xmlpath);
     doc.Release();
+}
+
+bool IsUTF16File(const wchar_t* input_file)
+{
+    if (FILE* fp = _wfopen(input_file, L"rb"))
+    {
+        wchar_t ab[2];
+        if (fread(ab, 1, 2, fp) == 2)
+        {
+            if (memcmp(ab, "\xFF\xFE", 2) == 0)
+            {
+                fclose(fp);
+                return true;
+            }
+            if (ab[0] && !ab[1])
+            {
+                fclose(fp);
+                return true;
+            }
+        }
+        fclose(fp);
+    }
+    return false;
+}
+
+void Pseudo_inf_utf16(std::wstring path) {
+    std::u16string buffer;
+    std::ifstream fin(path, std::ios::binary);
+    fin.seekg(0, std::ios::end);
+    size_t size = (size_t)fin.tellg();
+
+    //skip BOM
+    fin.seekg(2, std::ios::beg);
+    size -= 2;
+
+    std::u16string u16((size / 2) + 1, '\0');
+    fin.read((char*)&u16[0], size);
+
+    std::string utf8 = std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16);
+    std::wstring widestring = MAnsiToWide(65001, utf8).c_str();
+    utf8.clear();
+    std::vector<std::wstring> fullfile;
+    mstr_split(fullfile, widestring, L"\n");
+    widestring.clear();
+    FILE* fp;
+    _wfopen_s(&fp, L"D:\\1.txt", L"w, ccs=UTF-16LE");
+    if (fp) {
+
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L"");
+            fwprintf_s(fp, L"%ls\n", fullfile[cnt].c_str());
+        }
+        fclose(fp);
+    }
+    return;
+
 }

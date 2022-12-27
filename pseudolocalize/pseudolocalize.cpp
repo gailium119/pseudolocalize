@@ -71,6 +71,7 @@ int wmain(int argc, wchar_t** argv)
         textxpaths.push_back(L"//text");
         Pseudo_xml(argv[2], textxpaths, attrxpaths, false);
     }
+    else if (_wcsicmp(argv[1], L"infloc") == 0) Pseudo_inf_utf16(argv[2]);
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");
     return 0;
