@@ -462,7 +462,7 @@ void Pseudo_inf_utf16(std::wstring path) {
         bool pseudolocalize = false;
         for (int cnt = 0; cnt < fullfile.size(); cnt++) {
             replace_all(fullfile[cnt], L"\r", L"");
-            if (_wcsicmp(fullfile[cnt].c_str(), L"[Strings.0804]") == 0)fullfile[cnt] = L"[Strings.0501]";
+            if (_wcsicmp(fullfile[cnt].c_str(), L"[Strings.0409]") == 0)fullfile[cnt] = L"[Strings.0501]";
             if (!fullfile[cnt].empty()&&fullfile[cnt][0] == ';') {
                 if (fullfile[cnt].find(L"ocalizable") != std::wstring::npos) {
                     if (fullfile[cnt].find(L"on") == std::wstring::npos) pseudolocalize = true;
@@ -472,6 +472,13 @@ void Pseudo_inf_utf16(std::wstring path) {
             else if (!fullfile[cnt].empty() && pseudolocalize) {
                 std::vector<std::wstring> strings;
                 mstr_split(strings, fullfile[cnt], L"\"");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1) fullfile[cnt] += Pseudo_localize_utf8(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"\"";
+                }
             }
             fwprintf_s(fp, L"%ls\n", fullfile[cnt].c_str());
         }
