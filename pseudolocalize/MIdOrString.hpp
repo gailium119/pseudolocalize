@@ -82,19 +82,28 @@ struct MIdOrString
 
     MIdOrString(const TCHAR *str)
     {
+        bool isint = true;
         if (IS_INTRESOURCE(str))
         {
             m_id = LOWORD(str);
         }
-        else if ((L'0' <= str[0] && str[0] <= L'9') ||
-                 str[0] == L'-' || str[0] == L'+')
-        {
-            m_id = (WORD)mstr_parse_int(str);
-        }
-        else
-        {
-            m_id = 0;
-            m_str = str;
+        else {
+            size_t len = _tcslen(str);
+
+            for (size_t i = 0; i < len; i++) {
+                if ((L'0' > str[i] || str[i] > L'9') &&
+                    (str[i] != L'-' && str[i] != L'+'))isint = false;
+            }
+
+            if (isint)
+            {
+                m_id = (WORD)mstr_parse_int(str);
+            }
+            else
+            {
+                m_id = 0;
+                m_str = str;
+            }
         }
     }
 

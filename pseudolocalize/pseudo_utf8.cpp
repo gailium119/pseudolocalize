@@ -402,7 +402,7 @@ void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector
         table.SelectFromDocument(doc, attrxpaths[cnt].first.c_str());
         auto elements = table.GetElements();
         for (int cnt2 = 0; cnt2 < elements.size(); cnt2++) {
-          if(_wcsicmp(elements[cnt2].GetAttr(L"type").c_str(), L"string") == 0) elements[cnt2].SetAttr(attrxpaths[cnt].second, Pseudo_localize_utf8(elements[cnt2].GetAttr(attrxpaths[cnt].second), true, true, true, false, true));
+          if(_wcsicmp(elements[cnt2].GetAttr(L"type").c_str(), L"string") == 0|| _wcsicmp(attrxpaths[cnt].second.c_str(), L"value") != 0) elements[cnt2].SetAttr(attrxpaths[cnt].second, Pseudo_localize_utf8(elements[cnt2].GetAttr(attrxpaths[cnt].second), true, true, true, false, true));
             elements[cnt2].Release();
         }
         table.Release();

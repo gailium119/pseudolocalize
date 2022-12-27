@@ -191,7 +191,9 @@ ResToText::GetEntryFileName(const EntryBase& entry, bool pseudolocalize)
         {
             ret += L"Html_";
             ret += DumpEscapedName(entry.m_name);
-            ret += L".html";
+            size_t dot = ret.rfind(L".");
+            auto str = ret.substr(dot);
+            if(_wcsicmp(str.c_str(),L".xml")!=0)   ret += L".html";
         }
         else if (wType == (WORD)(UINT_PTR)RT_MANIFEST)
         {

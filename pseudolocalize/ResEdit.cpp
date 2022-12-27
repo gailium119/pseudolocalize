@@ -63,7 +63,7 @@ BOOL UnloadResourceH()
 
 BOOL DoLoadFile(LPCWSTR pszFileName, DWORD nFilterIndex, BOOL bForceDecompress)
 {
-    WCHAR szPath[MAX_PATH], szResolvedPath[MAX_PATH], * pchPart;
+    WCHAR szPath[MAX_PATH], * pchPart;
 
     enum LoadFilterIndex        // see also: IDS_EXERESRCFILTER
     {
