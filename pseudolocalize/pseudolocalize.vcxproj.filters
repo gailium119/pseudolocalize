@@ -66,6 +66,12 @@
     <ClCompile Include="Xml.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="prires.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base64.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Res.hpp">
@@ -168,6 +174,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="xml.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="prires.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base64.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

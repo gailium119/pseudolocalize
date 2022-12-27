@@ -142,12 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccelRes.cpp" />
+    <ClCompile Include="base64.cpp" />
     <ClCompile Include="DialogRes.cpp" />
     <ClCompile Include="DlgInitRes.cpp" />
     <ClCompile Include="IconRes.cpp" />
     <ClCompile Include="mcdx.cpp" />
     <ClCompile Include="MenuRes.cpp" />
     <ClCompile Include="PackedDIB.cpp" />
+    <ClCompile Include="prires.cpp" />
     <ClCompile Include="pseudo.cpp" />
     <ClCompile Include="pseudolocalize.cpp" />
     <ClCompile Include="pseudo_utf8.cpp" />
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccelRes.hpp" />
+    <ClInclude Include="base64.h" />
     <ClInclude Include="Common.hpp" />
     <ClInclude Include="ConstantsDB.hpp" />
     <ClInclude Include="DialogRes.hpp" />
@@ -182,6 +185,7 @@
     <ClInclude Include="MTextToText.hpp" />
     <ClInclude Include="MWindowBase.hpp" />
     <ClInclude Include="PackedDIB.hpp" />
+    <ClInclude Include="prires.h" />
     <ClInclude Include="pseudo.h" />
     <ClInclude Include="pstdint.h" />
     <ClInclude Include="Res.hpp" />

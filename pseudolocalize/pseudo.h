@@ -10,3 +10,4 @@ void Pseudo_xml(LPCWSTR xmlpath, std::vector<std::wstring> textxpaths, std::vect
 void Pseudo_inf(std::wstring path);
 void Pseudo_ini(std::wstring path);
 void Pseudo_mfl(std::wstring path);
+void Pseudo_psd1(std::wstring path);

@@ -611,6 +611,51 @@ void Pseudo_mfl_utf16(std::wstring path) {
     return;
 
 }
+void Pseudo_psd1_utf16(std::wstring path) {
+    std::u16string buffer;
+    std::ifstream fin(path, std::ios::binary);
+    fin.seekg(0, std::ios::end);
+    size_t size = (size_t)fin.tellg();
+
+    //skip BOM
+    fin.seekg(2, std::ios::beg);
+    size -= 2;
+
+    std::u16string u16((size / 2) + 1, '\0');
+    fin.read((char*)&u16[0], size);
+
+    std::string utf8 = std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16);
+    std::wstring widestring = MAnsiToWide(65001, utf8).c_str();
+    utf8.clear();
+    std::vector<std::wstring> fullfile;
+    mstr_split(fullfile, widestring, L"\n");
+    widestring.clear();
+    fin.close();
+    FILE* fp;
+    _wfopen_s(&fp, path.c_str(), L"w, ccs=UTF-16LE");
+    if (fp) {
+        bool pseudolocalize = false;
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L"");
+            if (!fullfile[cnt].empty() && fullfile[cnt].find(L"=")!=std::wstring::npos) {
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"=");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1) fullfile[cnt] += Pseudo_localize_utf8(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"=";
+                }
+            }
+            fwprintf_s(fp, L"%ls\n", fullfile[cnt].c_str());
+        }
+        fclose(fp);
+    }
+    return;
+
+}
 
 
 void Pseudo_inf_utf8(std::wstring path) {
@@ -758,6 +803,42 @@ void Pseudo_mfl_utf8(std::wstring path) {
     return;
 
 }
+void Pseudo_psd1_utf8(std::wstring path) {
+    std::wstring buffer;
+    std::wifstream in(path);
+    std::vector<std::wstring> fullfile;
+    if (in) // 有该文件
+    {
+        while (std::getline(in, buffer)) // line中不包括每行的换行符
+        {
+            fullfile.push_back((buffer));
+        }
+    }
+    in.close();
+    std::wofstream out(path);
+    if (out) {
+        bool pseudolocalize = false;
+        for (int cnt = 0; cnt < fullfile.size(); cnt++) {
+            replace_all(fullfile[cnt], L"\r", L""); 
+            if (!fullfile[cnt].empty() && fullfile[cnt].find(L"=") != std::wstring::npos) {
+
+                std::vector<std::wstring> strings;
+                mstr_split(strings, fullfile[cnt], L"=");
+                size_t size = strings.size();
+                fullfile[cnt].clear();
+                for (size_t cnt2 = 0; cnt2 < size; cnt2++) {
+                    if (cnt2 % 2 == 1 && fullfile[cnt].find(L"_000_") == std::wstring::npos) fullfile[cnt] += Pseudo_localize(strings[cnt2]);
+                    else fullfile[cnt] += strings[cnt2];
+                    if (cnt2 != size - 1) fullfile[cnt] += L"=";
+                }
+            }
+            out << fullfile[cnt].c_str() << std::endl;
+        }
+        out.close();
+    }
+    return;
+
+}
 
 void Pseudo_inf(std::wstring path) {
     if (IsUTF16File(path.c_str())) Pseudo_inf_utf16(path);
@@ -770,4 +851,8 @@ void Pseudo_ini(std::wstring path) {
 void Pseudo_mfl(std::wstring path) {
     if (IsUTF16File(path.c_str())) Pseudo_mfl_utf16(path);
     else  Pseudo_mfl_utf8(path);
+}
+void Pseudo_psd1(std::wstring path) {
+    if (IsUTF16File(path.c_str())) Pseudo_psd1_utf16(path);
+    else  Pseudo_psd1_utf8(path);
 }
