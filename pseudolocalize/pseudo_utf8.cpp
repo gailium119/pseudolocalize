@@ -82,10 +82,10 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid = true, bool wrap
         return str;
     }
     std::wstring buf = std::wstring(buffer, 5);
-    int len = str.length();
+    size_t len = str.length();
     bool nolower = true;
     bool hasunderline = false;
-    for (int cnt = 0; cnt < len; cnt++) {
+    for (size_t cnt = 0; cnt < len; cnt++) {
         std::wstring out;
         switch (str[cnt]) {
         case 'a': out = a[random(16)]; nolower = false; break;
@@ -225,7 +225,7 @@ std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid = true, bool 
         return str;
     }
     std::wstring buf = std::wstring(buffer, 5);
-    int len = str.length();
+    size_t len = str.length();
     bool nolower = true;
     bool hasunderline = false;
     int reallen = 0;
@@ -367,7 +367,7 @@ void Pseudo_xml(LPCWSTR xmlpath,std::vector<std::wstring> textxpaths,std::vector
             std::wstring str; 
             if(dirty)str= elements[cnt2].GetTextDirty();
             else str = elements[cnt2].GetText();
-            if(!str.empty())elements[cnt2].SetText(Pseudo_localize_utf8_xml(str, true, true, true, false, true));
+            if(!str.empty())elements[cnt2].SetText(Pseudo_localize_utf8_xml(str, true, true, true, !dirty, true));
             elements[cnt2].Release();
         }
         table.Release();

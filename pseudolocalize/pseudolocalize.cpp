@@ -18,6 +18,7 @@ int wmain(int argc, wchar_t** argv)
         wprintf(L"pseudotest.exe file [filename]\n");
         wprintf(L"pseudotest.exe rc [inputmui] [outputrc]\n");
         wprintf(L"pseudotest.exe xml [filename]\n");
+        wprintf(L"pseudotest.exe adml [filename]\n");
         return 0;
     }
     if (_wcsicmp(argv[1], L"string") == 0) {
@@ -53,6 +54,22 @@ int wmain(int argc, wchar_t** argv)
         table.Release();
         doc.Release();
         Pseudo_xml(argv[2], textxpaths, attrxpaths,false);
+    }
+    else if (_wcsicmp(argv[1], L"adml") == 0) {
+        CoInitialize(0);
+        std::vector<std::wstring> textxpaths;
+        std::vector<std::pair<std::wstring, std::wstring>>attrxpaths;
+        textxpaths.push_back(L"//string");
+        textxpaths.push_back(L"//dropdownList");
+        textxpaths.push_back(L"//checkBox");
+        textxpaths.push_back(L"//listBox");
+        textxpaths.push_back(L"//label");
+        textxpaths.push_back(L"//decimalTextBox");
+        textxpaths.push_back(L"//displayName");
+        textxpaths.push_back(L"//description");
+        textxpaths.push_back(L"//multiTextBox");
+        textxpaths.push_back(L"//text");
+        Pseudo_xml(argv[2], textxpaths, attrxpaths, false);
     }
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");

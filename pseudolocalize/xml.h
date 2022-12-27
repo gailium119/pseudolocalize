@@ -39,10 +39,10 @@ public:
 		this->XmlNode->get_xml(&bstr);
 		this->XmlNode->get_text(&bstr2);
 		std::wstring str;
-		int len = wcslen(bstr2);
+		size_t len = wcslen(bstr2);
 			str = bstr2;
 			bool isempty = true;
-			for (int cnt = 0; cnt < str.length(); cnt++) {
+			for (size_t cnt = 0; cnt < str.length(); cnt++) {
 				if (str[cnt] != ' ' && str[cnt] != '\t' && str[cnt] != '\0' && str[cnt] != '\n' && str[cnt] != '\r' && str[cnt] != ' ') {
 					isempty = false;
 				}
