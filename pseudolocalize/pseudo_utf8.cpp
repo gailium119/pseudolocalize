@@ -151,7 +151,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case '%': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt]!='l'&&str[cnt]!='W') {
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) && str[cnt]!='l'&&str[cnt]!='W') {
                     break;
                 }
                 if (str[cnt] == 'W') {
@@ -159,6 +159,15 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
                         out += str[cnt];
                         if (str[cnt] == '%') break;
                     }
+                    break;
+                }
+            }
+            break;
+        }
+        case '\\': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if ((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) {
                     break;
                 }
             }
@@ -176,7 +185,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case '&': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (str[cnt] >= 'A' && str[cnt] <= 'z') {
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z'))) {
                     break;
                 }
             }
@@ -185,6 +194,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case '_':hasunderline = true; out = str[cnt]; break;
         default: out = str[cnt]; break;
         }
+        if(genid&&genidwithnewline&&_wcsicmp(out.c_str(),L"\\n")==0)  out += (std::wstring(L"[" )+ buf + L"]");
         after += out;
     }
     bool isempty = true;
@@ -297,7 +307,7 @@ std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid, bool wraparo
         case '%': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (str[cnt] >= 'A' && str[cnt] <= 'z' && str[cnt] != 'l' && str[cnt] != 'W') {
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) && str[cnt] != 'l' && str[cnt] != 'W') {
                     break;
                 }
                 if (str[cnt] == 'W') {
@@ -322,7 +332,7 @@ std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid, bool wraparo
         case '&': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (str[cnt] >= 'A' && str[cnt] <= 'z') {
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z'))) {
                     break;
                 }
             }
@@ -423,11 +433,6 @@ bool IsUTF16File(const wchar_t* input_file)
         if (fread(ab, 1, 2, fp) == 2)
         {
             if (memcmp(ab, "\xFF\xFE", 2) == 0)
-            {
-                fclose(fp);
-                return true;
-            }
-            if (ab[0] && !ab[1])
             {
                 fclose(fp);
                 return true;

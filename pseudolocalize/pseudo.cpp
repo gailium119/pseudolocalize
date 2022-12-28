@@ -9,6 +9,7 @@
 #include <locale>
 #include<codecvt>
 #include "MString.hpp"
+#include"pseudo.h"
 #pragma warning(disable:4996)
 #define random(x)(rand()%x)
 namespace pseudo {
@@ -67,7 +68,7 @@ namespace pseudo {
     std::wstring charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 }
 using namespace pseudo;
-std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=true,bool extend=true) {
+std::wstring Pseudo_localize(std::wstring str, bool genid, bool wraparound, bool extend, bool genidwithnewline, bool skipempty) {
     std::wstring after;
     wchar_t buffer[5] = L"";
     for (int cnt = 0; cnt <= 4; cnt++) {
@@ -77,6 +78,7 @@ std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=t
     std::wstring buf = std::wstring(buffer, 5);
     size_t len = str.length();
     bool nolower = true;
+    bool hasunderline = false;
     for (int cnt = 0; cnt < len; cnt++) {
         std::wstring out;
         switch (str[cnt]) {
@@ -132,9 +134,58 @@ std::wstring Pseudo_localize(std::wstring str,bool genid=true, bool wraparound=t
         case 'X': out = X[random(4)]; break;
         case 'Y': out = Y[random(8)]; break;
         case 'Z': out = Z[random(4)]; break;
-        case '\n':out = std::wstring(L"\n") + L"[" + buf + L"]"; break;
+        case '\n': {
+            if (genid && genidwithnewline) out = std::wstring(L"\n") + L"[" + buf + L"]";
+            else out = L"\n";
+            break;
+        }
+        case '%': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) && str[cnt] != 'l' && str[cnt] != 'W') {
+                    break;
+                }
+                if (str[cnt] == 'W') {
+                    for (cnt++; cnt < len; cnt++) {
+                        out += str[cnt];
+                        if (str[cnt] == '%') break;
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case '\\': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z'))) {
+                    break;
+                }
+            }
+            break;
+        }
+        case '<': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (str[cnt] == '>') {
+                    break;
+                }
+            }
+            break;
+        }
+        case '&': {
+            for (; cnt < len; cnt++) {
+                out += str[cnt];
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z'))) {
+                    break;
+                }
+            }
+            break;
+        }
+        case '_':hasunderline = true; out = str[cnt]; break;
         default: out = str[cnt]; break;
         }
+        if (genid && genidwithnewline && _wcsicmp(out.c_str(), L"\\n") == 0)  out += (std::wstring(L"[") + buf + L"]");
         after += out;
     }
     if (nolower) {
