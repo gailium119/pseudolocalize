@@ -467,6 +467,7 @@ MenuRes::Dump(const MIdOrString& name, bool pseudolocalize) const
             ret += string_type((item.wDepth + 1) * 4, L' ');
             if (item.wMenuID == 0 && item.text.empty())
             {
+
                 ret += L"MENUITEM SEPARATOR\r\n";
             }
             else
@@ -593,7 +594,7 @@ MenuRes::DumpEx(const MIdOrString& name,bool pseudolocalize) const
             ret += string_type((item.wDepth + 1) * 4, L' ');
             if (item.menuId == 0 && item.text.empty())
             {
-                ret += L"MENUITEM SEPARATOR\r\n";
+                ret += L"MENUITEM MFT_SEPARATOR\r\n";
             }
             else
             {

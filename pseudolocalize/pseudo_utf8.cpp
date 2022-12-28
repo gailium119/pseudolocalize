@@ -210,6 +210,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
     buf = std::wstring(L"[") + buf + L"]";
     if (wraparound) after = std::wstring(L"[") + after + L"]";
     if (genid)after = buf + after;
+    if (after.length() > 3800)after = after.substr(0, 3800);
     return after;
 }
 std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid, bool wraparound, bool extend, bool genidwithnewline, bool skipempty) {
