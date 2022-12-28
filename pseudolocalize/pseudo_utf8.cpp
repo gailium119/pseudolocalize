@@ -846,6 +846,17 @@ void Pseudo_mfl_utf8(std::wstring path) {
                                         fullfile[cnt] = fullfile[cnt].substr(parser + 2);
                                         break;
                                     }
+                                    else if (parser > 2 && fullfile[cnt][parser - 1] == '\\') {
+                                        size_t parser2 = 1;
+                                        for (; parser2 <= parser; parser2++) {
+                                            if (fullfile[cnt][parser - parser2] != '\\')break;
+                                        }
+                                        if (parser2 % 2 == 1) {
+                                            buffer = fullfile[cnt].substr(0, parser);
+                                            fullfile[cnt] = fullfile[cnt].substr(parser + 2);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
 
@@ -877,6 +888,17 @@ void Pseudo_mfl_utf8(std::wstring path) {
                                         buffer = fullfile[cnt].substr(0, parser);
                                         fullfile[cnt] = fullfile[cnt].substr(parser + 2);
                                         break;
+                                    }
+                                    else if (parser > 2 && fullfile[cnt][parser - 1] == '\\') {
+                                        size_t parser2 = 1;
+                                        for (; parser2 <= parser; parser2++) {
+                                            if (fullfile[cnt][parser - parser2] != '\\')break;
+                                        }
+                                        if (parser2 % 2 == 1) {
+                                            buffer = fullfile[cnt].substr(0, parser);
+                                            fullfile[cnt] = fullfile[cnt].substr(parser + 2);
+                                            break;
+                                        }
                                     }
                                 }
                             }
