@@ -117,7 +117,7 @@ StringRes::Dump(bool pseudolocalize)
         ret += L"BEGIN\r\n";
     else
         ret += L"{\r\n";
-
+    if (m_map.empty())return L"";
     for (auto& pair : m_map)
     {
         if (pair.second.empty())
