@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClInclude Include="AccelRes.hpp" />
     <ClInclude Include="base64.h" />
-    <ClInclude Include="Common.hpp" />
     <ClInclude Include="ConstantsDB.hpp" />
     <ClInclude Include="DialogRes.hpp" />
     <ClInclude Include="DlgInit.h" />

@@ -80,9 +80,6 @@
     <ClInclude Include="AccelRes.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Common.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ConstantsDB.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
