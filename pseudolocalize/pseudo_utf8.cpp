@@ -586,16 +586,20 @@ void Pseudo_mfl_utf16(std::wstring path) {
                         builder += fullfile[cnt].substr(0, found + 13);
                         fullfile[cnt] = fullfile[cnt].substr(found + 13);
                         std::wstring buffer;
-
-                        found = fullfile[cnt].find(L"\")");
-                        buffer += fullfile[cnt].substr(0, found);
-                        fullfile[cnt] = fullfile[cnt].substr(found + 2);
-                        while (buffer[buffer.length() - 1] == '\\') {
-                            // (\"xxxxx\")
-                            buffer += L"\")";
-                            found = fullfile[cnt].find(L"\")");
-                            buffer += fullfile[cnt].substr(0, found);
-                            fullfile[cnt] = fullfile[cnt].substr(found + 2);
+                        int leftcnt = 1;
+                        for (size_t parser = 0; parser < fullfile[cnt].length(); parser++) {
+                            if (fullfile[cnt][parser] == '(')leftcnt++;
+                            else if (fullfile[cnt][parser] == ')')leftcnt--;
+                            if (leftcnt == 0) {//found the end
+                                if (fullfile[cnt][parser - 1] == '\"') {
+                                    buffer = fullfile[cnt].substr(0, parser - 2);
+                                    fullfile[cnt] = fullfile[cnt].substr(parser + 1);
+                                    break;
+                                }
+                                else {//1)
+                                    leftcnt++;
+                                }
+                            }
                         }
                         builder += Pseudo_localize_utf8(buffer);
                         builder += L"\")";
@@ -612,17 +616,22 @@ void Pseudo_mfl_utf16(std::wstring path) {
                         builder += fullfile[cnt].substr(0, found + 13);
                         fullfile[cnt] = fullfile[cnt].substr(found + 13);
                         std::wstring buffer;
-
-                        found = fullfile[cnt].find(L"\")");
-                        buffer += fullfile[cnt].substr(0, found);
-                        fullfile[cnt] = fullfile[cnt].substr(found + 2);
-                        while (buffer[buffer.length() - 1] == '\\') {
-                            // (\"xxxxx\")
-                            buffer += L"\")";
-                            found = fullfile[cnt].find(L"\")");
-                            buffer += fullfile[cnt].substr(0, found);
-                            fullfile[cnt] = fullfile[cnt].substr(found + 2);
+                        int leftcnt = 1;
+                        for (size_t parser = 0; parser < fullfile[cnt].length(); parser++) {
+                            if (fullfile[cnt][parser] == '(')leftcnt++;
+                            else if (fullfile[cnt][parser] == ')')leftcnt --;
+                            if (leftcnt == 0) {//found the end
+                                if (fullfile[cnt][parser - 1] == '\"') {
+                                    buffer = fullfile[cnt].substr(0, parser - 2);
+                                    fullfile[cnt] = fullfile[cnt].substr(parser + 1);
+                                    break;
+                                }
+                                else {//1)
+                                    leftcnt++;
+                                }
+                            }
                         }
+
                         builder += Pseudo_localize_utf8(buffer);
                         builder += L"\")";
                     }
@@ -798,16 +807,20 @@ void Pseudo_mfl_utf8(std::wstring path) {
                         builder += fullfile[cnt].substr(0, found + 13);
                         fullfile[cnt] = fullfile[cnt].substr(found + 13);
                         std::wstring buffer;
-
-                        found = fullfile[cnt].find(L"\")");
-                        buffer += fullfile[cnt].substr(0, found);
-                        fullfile[cnt] = fullfile[cnt].substr(found + 2);
-                        while (buffer[buffer.length() - 1] == '\\') {
-                            // (\"xxxxx\")
-                            buffer += L"\")";
-                            found = fullfile[cnt].find(L"\")");
-                            buffer += fullfile[cnt].substr(0, found);
-                            fullfile[cnt] = fullfile[cnt].substr(found + 2);
+                        int leftcnt = 1;
+                        for (size_t parser = 0; parser < fullfile[cnt].length(); parser++) {
+                            if (fullfile[cnt][parser] == '(')leftcnt++;
+                            else if (fullfile[cnt][parser] == ')')leftcnt--;
+                            if (leftcnt == 0) {//found the end
+                                if (fullfile[cnt][parser - 1] == '\"') {
+                                    buffer = fullfile[cnt].substr(0, parser - 2);
+                                    fullfile[cnt] = fullfile[cnt].substr(parser + 1);
+                                    break;
+                                }
+                                else {//1)
+                                    leftcnt++;
+                                }
+                            }
                         }
                         builder += Pseudo_localize(buffer);
                         builder += L"\")";
@@ -824,16 +837,20 @@ void Pseudo_mfl_utf8(std::wstring path) {
                         builder += fullfile[cnt].substr(0, found + 13);
                         fullfile[cnt] = fullfile[cnt].substr(found + 13);
                         std::wstring buffer;
-
-                        found = fullfile[cnt].find(L"\")");
-                        buffer += fullfile[cnt].substr(0, found);
-                        fullfile[cnt] = fullfile[cnt].substr(found + 2);
-                        while (buffer[buffer.length() - 1] == '\\') {
-                            // (\"xxxxx\")
-                            buffer += L"\")";
-                            found = fullfile[cnt].find(L"\")");
-                            buffer += fullfile[cnt].substr(0, found);
-                            fullfile[cnt] = fullfile[cnt].substr(found + 2);
+                        int leftcnt = 1;
+                        for (size_t parser = 0; parser < fullfile[cnt].length(); parser++) {
+                            if (fullfile[cnt][parser] == '(')leftcnt++;
+                            else if (fullfile[cnt][parser] == ')')leftcnt--;
+                            if (leftcnt == 0) {//found the end
+                                if (fullfile[cnt][parser - 1] == '\"') {
+                                    buffer = fullfile[cnt].substr(0, parser - 2);
+                                    fullfile[cnt] = fullfile[cnt].substr(parser + 1);
+                                    break;
+                                }
+                                else {//1)
+                                    leftcnt++;
+                                }
+                            }
                         }
                         builder += Pseudo_localize(buffer);
                         builder += L"\")";
