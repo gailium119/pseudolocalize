@@ -84,10 +84,15 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         // an xml file
         return str;
     }
+    if (str.length() > 3 && str[0] == '0' && (str[1] == 'x'|| str[1]=='X')) {
+        // an xml file
+        return str;
+    }
     std::wstring buf = std::wstring(buffer, 5);
     size_t len = str.length();
     bool nolower = true;
     bool hasunderline = false;
+    bool noupper = true;
     for (size_t cnt = 0; cnt < len; cnt++) {
         std::wstring out;
         switch (str[cnt]) {
@@ -117,32 +122,32 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case 'x': out = x[random(3)]; nolower = false; break;
         case 'y': out = y[random(7)];  nolower = false; break;
         case 'z': out = z[random(3)];  nolower = false; break;
-        case 'A': out = A[random(16)]; break;
-        case 'B': out = B[random(7)]; break;
-        case 'C': out = C[random(7)]; break;
-        case 'D': out = D[random(3)]; break;
-        case 'E': out = E[random(18)]; break;
-        case 'F': out = F[random(1)]; break;
-        case 'G': out = G[random(4)]; break;
-        case 'H': out = H[random(5)]; break;
-        case 'I': out = I[random(12)]; break;
-        case 'J': out = J[random(2)]; break;
-        case 'K': out = K[random(4)]; break;
-        case 'L': out = L[random(7)]; break;
-        case 'M': out = M[random(2)]; break;
-        case 'N': out = N[random(11)]; break;
-        case 'O': out = O[random(18)]; break;
-        case 'P': out = P[random(3)]; break;
-        case 'Q': out = Q[random(1)]; break;
-        case 'R': out = R[random(8)]; break;
-        case 'S': out = S[random(5)]; break;
-        case 'T': out = T[random(5)]; break;
-        case 'U': out = U[random(12)]; break;
-        case 'V': out = V[random(1)]; break;
-        case 'W': out = W[random(5)]; break;
-        case 'X': out = X[random(4)]; break;
-        case 'Y': out = Y[random(8)]; break;
-        case 'Z': out = Z[random(4)]; break;
+        case 'A': out = A[random(16)]; noupper = false;  break;
+        case 'B': out = B[random(7)]; noupper = false; break;
+        case 'C': out = C[random(7)]; noupper = false; break;
+        case 'D': out = D[random(3)]; noupper = false; break;
+        case 'E': out = E[random(18)];  noupper = false; break;
+        case 'F': out = F[random(1)]; noupper = false; break;
+        case 'G': out = G[random(4)];  noupper = false; break;
+        case 'H': out = H[random(5)]; noupper = false; break;
+        case 'I': out = I[random(12)]; noupper = false; break;
+        case 'J': out = J[random(2)]; noupper = false; break;
+        case 'K': out = K[random(4)];  noupper = false; break;
+        case 'L': out = L[random(7)];  noupper = false; break;
+        case 'M': out = M[random(2)]; noupper = false; break;
+        case 'N': out = N[random(11)]; noupper = false; break;
+        case 'O': out = O[random(18)]; noupper = false; break;
+        case 'P': out = P[random(3)];  noupper = false; break;
+        case 'Q': out = Q[random(1)]; noupper = false; break;
+        case 'R': out = R[random(8)];  noupper = false; break;
+        case 'S': out = S[random(5)]; noupper = false; break;
+        case 'T': out = T[random(5)];  noupper = false; break;
+        case 'U': out = U[random(12)];  noupper = false; break;
+        case 'V': out = V[random(1)]; noupper = false; break;
+        case 'W': out = W[random(5)]; noupper = false; break;
+        case 'X': out = X[random(4)]; noupper = false; break;
+        case 'Y': out = Y[random(8)];  noupper = false; break;
+        case 'Z': out = Z[random(4)]; noupper = false; break;
         case '\n': {
             if (genid && genidwithnewline) out = std::wstring(L"\n") + L"[" + buf + L"]";
             else out = L"\n"; 
@@ -209,6 +214,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         // supposingly a macro
         return str;
     }
+    if (nolower && noupper && !isempty) return str;
     //wrap
     if (extend) {
         int lencnt = (int)floor(len * 3.0 / 10.0 + 0.5);

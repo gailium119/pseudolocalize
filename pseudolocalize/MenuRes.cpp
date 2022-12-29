@@ -451,7 +451,7 @@ MenuRes::Dump(const MIdOrString& name, bool pseudolocalize) const
         {
             ret += string_type((item.wDepth + 1) * 4, L' ');
             ret += L"POPUP \"";
-            if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text));
+            if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text, true, true, true, true, true));
             else ret += mstr_escape(item.text);
             ret += L"\"";
             ret += DumpFlags(item.fItemFlags);
@@ -473,7 +473,7 @@ MenuRes::Dump(const MIdOrString& name, bool pseudolocalize) const
             else
             {
                 ret += L"MENUITEM \"";
-                if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text));
+                if (pseudolocalize) ret += mstr_escape(Pseudo_localize_utf8(item.text, true, true, true, true, true));
                 else ret += mstr_escape(item.text);
                 ret += L"\", ";
                 if (0)
@@ -544,7 +544,7 @@ MenuRes::DumpEx(const MIdOrString& name,bool pseudolocalize) const
         {
             ret += string_type((item.wDepth + 1) * 4, L' ');
             ret += L"POPUP ";
-            if(pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text));
+            if(pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text,true,true,true,true,true));
             else ret += mstr_quote(item.text);
             if (item.menuId || item.dwType || item.dwState || item.dwHelpId)
             {
@@ -599,7 +599,7 @@ MenuRes::DumpEx(const MIdOrString& name,bool pseudolocalize) const
             else
             {
                 ret += L"MENUITEM ";
-                if (pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text));
+                if (pseudolocalize) ret += mstr_quote(Pseudo_localize_utf8(item.text, true, true, true, true, true));
                 else ret += mstr_quote(item.text);
                 if (item.menuId || item.dwType || item.dwState)
                 {

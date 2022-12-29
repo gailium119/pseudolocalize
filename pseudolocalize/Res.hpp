@@ -822,6 +822,10 @@ public:
                     m_data.push_back('c');
                     m_data.push_back('\0');
                     while (m_data.size() % 8 != 0)                m_data.push_back('\0');
+                    for (int i = 1; i <= 8; i++) {
+                        m_data.push_back('\0');
+                    }
+                    m_data[4] += 8;
                     break;
 
                 }

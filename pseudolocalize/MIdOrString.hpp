@@ -293,7 +293,7 @@ struct MIdOrString
         return s_str[s_rotate].c_str();
     }
 
-    MString quoted_wstr(bool pseudolocalize=false) const
+    MString quoted_wstr(bool pseudolocalize=false,bool skipempty=false) const
     {
         MString ret;
         if (m_id == 0)
@@ -301,7 +301,7 @@ struct MIdOrString
             if (m_str.size())
             {
                 ret += TEXT("\"");
-                if (pseudolocalize) ret += Pseudo_localize_utf8(mstr_escape(m_str));
+                if (pseudolocalize) ret += Pseudo_localize_utf8(mstr_escape(m_str),true,true,true,true,skipempty);
                 else  ret += mstr_escape(m_str);
                 ret += TEXT("\"");
             }

@@ -356,7 +356,7 @@ MStringW DialogItem::DumpControl(MStringW& cls,bool pseudolocalize) const
     }
     else
     {
-        ret += m_title.quoted_wstr(pseudolocalize);
+        ret += m_title.quoted_wstr(pseudolocalize,true);
     }
 
     ret += L", ";
@@ -442,7 +442,7 @@ DialogItem::_do_CONTROL(bool bNeedsText,
         }
         else
         {
-            ret += m_title.quoted_wstr(pseudolocalize);
+            ret += m_title.quoted_wstr(pseudolocalize,true);
         }
         ret += L", ";
     }
@@ -885,8 +885,8 @@ MStringW DialogRes::Dump(const MIdOrString& id_or_str, bool bAlwaysControl,bool 
     if (!m_title.empty())
     {
         ret += L"CAPTION ";
-        if (pseudolocalize) ret += (m_title.quoted_wstr(pseudolocalize));
-       else ret += m_title.quoted_wstr(pseudolocalize);
+        if (pseudolocalize) ret += (m_title.quoted_wstr(pseudolocalize,true));
+       else ret += m_title.quoted_wstr();
         ret += L"\r\n";
     }
     if (!m_class.empty())
