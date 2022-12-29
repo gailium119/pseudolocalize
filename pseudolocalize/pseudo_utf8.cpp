@@ -88,6 +88,10 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         // an xml file
         return str;
     }
+    if (str.find(L"Segoe") != std::wstring::npos) {
+        //a font
+        return str;
+    }
     std::wstring buf = std::wstring(buffer, 5);
     size_t len = str.length();
     bool nolower = true;

@@ -145,7 +145,9 @@ HRESULT AddRes(MrmResBase* res, MrmResourceIndexerHandle indexer, bool pseudoloc
 	else qualifier += res->lang;
 	if (_wcsicmp(res->type.c_str(), L"String") == 0) {
 		MrmResString* resr = (MrmResString*)res;
-		if(pseudolocalize) hr = MrmIndexString(indexer, resr->uri.c_str(),Pseudo_localize_utf8(resr->value).c_str(), qualifier.c_str());
+		if(pseudolocalize
+			&&res->uri.find(L"FontWeight") == std::wstring::npos
+			&& res->uri.find(L"TextTrimming") == std::wstring::npos) hr = MrmIndexString(indexer, resr->uri.c_str(), Pseudo_localize_utf8(resr->value,true,true,true,true,true).c_str(), qualifier.c_str());
 		else  hr = MrmIndexString(indexer, resr->uri.c_str(), resr->value.c_str(), qualifier.c_str());
 		delete resr;
 	}

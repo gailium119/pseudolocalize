@@ -164,9 +164,6 @@
     <ClInclude Include="pseudo.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="mcdx.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -179,5 +176,12 @@
     <ClInclude Include="base64.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mrmsupport.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Constants.txt" />
+    <Text Include="data.txt" />
   </ItemGroup>
 </Project>
