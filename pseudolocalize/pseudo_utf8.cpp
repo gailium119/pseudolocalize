@@ -92,7 +92,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         //Normal color,Normal size
         return str;
     }
-    if (str.find(L"Segoe") != std::wstring::npos) {
+    if (str.find(L"Segoe") != std::wstring::npos|| str.find(L"segoe") != std::wstring::npos) {
         //a font
         return str;
     }
