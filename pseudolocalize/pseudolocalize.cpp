@@ -85,6 +85,12 @@ int wmain(int argc, wchar_t** argv)
         CreatePri(argv[2],true);
     }
     else if (_wcsicmp(argv[1], L"psd1") == 0) Pseudo_psd1(argv[2]);
+    else if (_wcsicmp(argv[1], L"rcnolocalize") == 0) {
+        if (argc != 4) {
+            wprintf(L"Invalid Usage\npseudotest.exe rcnolocalize [inputmui] [outputrc]");
+        }
+        ExportRC(argv[2], argv[3], false);
+    }
 
     // ReadData1(L"data.txt");
     // ReadData2(L"data.txt");

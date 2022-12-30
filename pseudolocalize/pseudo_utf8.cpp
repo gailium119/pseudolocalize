@@ -85,7 +85,11 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         return str;
     }
     if (str.length() > 3 && str[0] == '0' && (str[1] == 'x'|| str[1]=='X')) {
-        // an xml file
+        // a hex string 0x8000xxxx
+        return str;
+    }
+    if (str.length() >=6 && str[0] == 'N' && str[1] == 'o' && str[2] == 'r' && str[3] == 'm' && str[4] == 'a' && str[5] == 'l'){
+        //Normal color,Normal size
         return str;
     }
     if (str.find(L"Segoe") != std::wstring::npos) {
