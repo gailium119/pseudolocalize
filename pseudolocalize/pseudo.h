@@ -11,3 +11,4 @@ void Pseudo_inf(std::wstring path);
 void Pseudo_ini(std::wstring path);
 void Pseudo_mfl(std::wstring path);
 void Pseudo_psd1(std::wstring path);
+void Pseudo_resx(LPCWSTR path);

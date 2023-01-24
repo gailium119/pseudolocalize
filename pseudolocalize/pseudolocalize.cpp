@@ -93,10 +93,7 @@ int wmain(int argc, wchar_t** argv)
     }
     else if (_wcsicmp(argv[1], L"resx") == 0) {
         CoInitialize(0);
-        std::vector<std::wstring> textxpaths;
-        std::vector<std::pair<std::wstring, std::wstring>>attrxpaths;
-        textxpaths.push_back(L"./root/data/value");
-        Pseudo_xml(argv[2], textxpaths, attrxpaths, false);
+        Pseudo_resx(argv[2]);
     }
 
     // ReadData1(L"data.txt");

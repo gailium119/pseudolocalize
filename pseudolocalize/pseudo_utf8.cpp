@@ -985,3 +985,51 @@ void Pseudo_psd1(std::wstring path) {
     if (IsUTF16File(path.c_str())) Pseudo_psd1_utf16(path);
     else  Pseudo_psd1_utf8(path);
 }
+void Pseudo_resx(LPCWSTR path) {
+    MyXmlDoc doc;
+    doc.Load(path);
+    MyXmlElementTable table;
+    table.SelectFromDocument(doc, L"./root/data");
+    auto elements = table.GetElements();
+    for (int cnt2 = 0; cnt2 < elements.size(); cnt2++) {
+        auto type = elements[cnt2].GetAttr(L"type");
+        auto name = elements[cnt2].GetAttr(L"name");
+        bool blocalize = false;
+        if (name.rfind(L".") == std::wstring::npos && name.rfind(L"_Name") != std::wstring::npos)blocalize = true;
+        if (name.rfind(L".") != std::wstring::npos && (name.rfind(L".text") ==name.length()-5
+            || name.rfind(L".Text") == name.length() - 5))blocalize = true;
+        if (type.length() == 0&&blocalize) {
+            MyXmlElementTable datatable;
+            datatable.SelectFromElement(elements[cnt2], L"./value");
+            auto dataelement = datatable.GetElements();
+            std::wstring str = dataelement[0].GetText();
+            if (!str.empty())dataelement[0].SetText(Pseudo_localize_utf8_xml(str, true, true, true, false, true));
+            dataelement[0].Release();
+            datatable.Release();
+        }
+        if (_wcsicmp(type.c_str(), L"System.Drawing.Size, System.Drawing") == 0
+            || _wcsicmp(type.c_str(), L"System.Drawing.Point, System.Drawing") == 0) {
+            MyXmlElementTable datatable;
+            datatable.SelectFromElement(elements[cnt2], L"./value");
+            auto dataelement = datatable.GetElements();
+            std::wstring str = dataelement[0].GetText();
+            if (!str.empty()) {
+                auto x = str.substr(0, str.find(L","));
+                auto y = str.substr(str.find(L",")+1);
+                int sizex = _wtoi(x.c_str());
+                int sizey = _wtoi(y.c_str());
+                sizex = (int)(sizex*1.4);
+                wchar_t buffer[30] = L"";
+                swprintf(buffer, L"%d, %d", sizex, sizey);
+                dataelement[0].SetText(buffer);
+            }
+            dataelement[0].Release();
+            datatable.Release();
+        }
+        elements[cnt2].Release();
+    }
+    table.Release();
+
+    doc.Save(path);
+    doc.Release();
+}
