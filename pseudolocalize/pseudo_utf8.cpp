@@ -995,7 +995,7 @@ void Pseudo_resx(LPCWSTR path) {
         auto type = elements[cnt2].GetAttr(L"type");
         auto name = elements[cnt2].GetAttr(L"name");
         bool blocalize = false;
-        if (name.rfind(L".") == std::wstring::npos && name.rfind(L"_Name") != std::wstring::npos)blocalize = true;
+        if (name.rfind(L".") == std::wstring::npos && name.rfind(L"_Name") == std::wstring::npos)blocalize = true;
         if (name.rfind(L".") != std::wstring::npos && (name.rfind(L".text") ==name.length()-5
             || name.rfind(L".Text") == name.length() - 5))blocalize = true;
         if (type.length() == 0&&blocalize) {
@@ -1003,7 +1003,8 @@ void Pseudo_resx(LPCWSTR path) {
             datatable.SelectFromElement(elements[cnt2], L"./value");
             auto dataelement = datatable.GetElements();
             std::wstring str = dataelement[0].GetText();
-            if (!str.empty())dataelement[0].SetText(Pseudo_localize_utf8_xml(str, true, true, true, false, true));
+            if (!str.empty()&&_wcsicmp(str.c_str(),L"false")!=0&&
+                _wcsicmp(str.c_str(), L"true") != 0)dataelement[0].SetText(Pseudo_localize_utf8(str, true, true, true, false, true));
             dataelement[0].Release();
             datatable.Release();
         }
