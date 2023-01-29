@@ -164,7 +164,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case '%': {
             for (; cnt < len; cnt++) {
                 out += str[cnt];
-                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) && str[cnt]!='l'&&str[cnt]!='W') {
+                if (((str[cnt] >= 'A' && str[cnt] <= 'Z')|| (str[cnt] >= 'a' && str[cnt] <= 'z')) && str[cnt]!='l'&&str[cnt]!='W'&& str[cnt]!='w') {
                     break;
                 }
                 if (str[cnt] == 'W') {
@@ -207,7 +207,7 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
         case '_':hasunderline = true; out = str[cnt]; break;
         default: out = str[cnt]; break;
         }
-        if(genid&&genidwithnewline&&_wcsicmp(out.c_str(),L"\\n")==0)  out += (std::wstring(L"[" )+ buf + L"]");
+        if(genid&&genidwithnewline&&_wcsicmp(out.c_str(),L"\\n")==0)  out = (std::wstring(L"]\\n[")+ buf + L"][");
         after += out;
     }
     bool isempty = true;
@@ -234,7 +234,6 @@ std::wstring Pseudo_localize_utf8(std::wstring str, bool genid, bool wraparound,
     buf = std::wstring(L"[") + buf + L"]";
     if (wraparound) after = std::wstring(L"[") + after + L"]";
     if (genid)after = buf + after;
-    if (after.length() > 3800)after = after.substr(0, 3800);
     return after;
 }
 std::wstring Pseudo_localize_utf8_xml(std::wstring str, bool genid, bool wraparound, bool extend, bool genidwithnewline, bool skipempty) {

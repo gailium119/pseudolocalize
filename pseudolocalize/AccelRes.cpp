@@ -98,8 +98,11 @@ MStringW AccelRes::Dump(const MIdOrString &id_or_str) const
         else
         {
             std::string str;
-            str += (char)entry.wAscii;
-            ret += MAnsiToWide(CP_ACP, mstr_quote(str));
+            if ((char)entry.wAscii == '^')ret += L"94";
+            else {
+                str += (char)entry.wAscii;
+                ret += MAnsiToWide(CP_ACP, mstr_quote(str));
+            }
         }
         ret += L", ";
         if (0)
