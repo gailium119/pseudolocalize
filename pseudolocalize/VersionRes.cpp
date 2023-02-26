@@ -93,7 +93,7 @@ VersionRes::DumpValue(WORD wType, const Var& value, int depth,bool pseudolocaliz
             WCHAR buf[MAX_PATH];
             for (size_t i = 0; i < value.value.size(); i += 2)
             {
-                if (*pw == 1033) {
+                if (*pw == 1033&& pseudolocalize) {
                     StringCchPrintfW(buf, _countof(buf), L", 0x%04X",1281 );
                      pw++;
                 }
